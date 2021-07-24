@@ -49,18 +49,11 @@ export default {
   ],
 
   proxy: {
-    '/api': {
-      target: 'http://localhost:3000/',
-    },
+    '/api/': 'http://localhost:3000',
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    // baseurlの有効化
-    prefix: process.env.API_PREFIX,
-    host: process.env.API_HOST,
-    port: process.env.API_PORT,
-  },
+  axios: {},
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -83,10 +76,10 @@ export default {
 
   auth: {
     redirect: {
-      login: '/users/login',
+      login: '/login',
       logout: '/',
       callback: false,
-      home: '/users/profile',
+      home: '/users',
     },
     strategies: {
       local: {
