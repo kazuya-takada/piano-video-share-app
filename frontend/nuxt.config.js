@@ -55,7 +55,12 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    // baseurlの有効化
+    prefix: process.env.API_PREFIX,
+    host: process.env.API_HOST,
+    port: process.env.API_PORT,
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -71,6 +76,28 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
+        },
+      },
+    },
+  },
+
+  auth: {
+    redirect: {
+      login: '/users/login',
+      logout: '/',
+      callback: false,
+      home: '/users/profile',
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/v1/auth/login',
+            method: 'post',
+            propertyName: 'token',
+          },
+          logout: { url: '/api/v1/auth/logout', method: 'post' },
+          user: false,
         },
       },
     },
