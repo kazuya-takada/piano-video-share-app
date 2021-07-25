@@ -10,7 +10,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - frontend',
-    title: 'frontend',
+    title: 'ピアノ動画シェア（仮）',
     htmlAttrs: {
       lang: 'ja',
     },

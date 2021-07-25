@@ -60,7 +60,7 @@ export default {
       this.$axios
         .post('http://localhost:3000/api/v1/auth', this.user)
         .then((response) => {
-          window.location.href = '/users/comfirmation'
+          window.location.href = '/'
         })
     },
   },
