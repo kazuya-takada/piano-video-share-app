@@ -10,7 +10,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - frontend',
-    title: 'frontend',
+    title: 'ピアノ動画シェア（仮）',
     htmlAttrs: {
       lang: 'ja',
     },
@@ -49,9 +49,7 @@ export default {
   ],
 
   proxy: {
-    '/api': {
-      target: 'http://localhost:3000/',
-    },
+    '/api/': 'http://localhost:3000',
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -71,6 +69,28 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
+        },
+      },
+    },
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: false,
+      home: '/users',
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/v1/auth/login',
+            method: 'post',
+            propertyName: 'token',
+          },
+          logout: { url: '/api/v1/auth/logout', method: 'post' },
+          user: false,
         },
       },
     },
