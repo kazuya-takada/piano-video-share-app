@@ -34,6 +34,7 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/composition-api/module',
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
@@ -46,7 +47,12 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/auth',
+    '@nuxt/http',
   ],
+
+  http: {
+    proxy: true,
+  },
 
   proxy: {
     '/api/': 'http://localhost:3000',

@@ -9,24 +9,24 @@
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <v-text-field
-            v-model="user.name"
+            v-model="state.name"
             prepend-icon="mdi-account"
             label="名前"
           />
           <v-text-field
-            v-model="user.email"
+            v-model="state.email"
             prepend-icon="mdi-email"
             label="メールアドレス"
           />
           <v-text-field
             type="password"
-            v-model="user.password"
+            v-model="state.password"
             prepend-icon="mdi-lock"
             label="パスワード"
           />
           <v-text-field
             type="password"
-            v-model="user.password_confirmation"
+            v-model="state.password_confirmation"
             prepend-icon="mdi-lock"
             label="パスワード確認"
           />
@@ -41,28 +41,48 @@
   </v-container>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  auth: false,
-  data() {
+<script lang="ts">
+import {
+  defineComponent,
+  reactive,
+  useAsync,
+  useContext,
+  useRouter,
+} from '@nuxtjs/composition-api'
+
+export default defineComponent({
+  setup() {
+    const { $http } = useContext()
+    const router = useRouter()
+
+    interface State {
+      name: string
+      email: string
+      password: string
+      password_confirmation: string
+    }
+
+    const state = reactive<State>({
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+    })
+
+    // 入れ直さないと使えない？
+    const user: State = state
+
+    const registerUser = () => {
+      useAsync(() => {
+        $http.post('/api/v1/auth', user)
+        router.push('/')
+      })
+    }
+
     return {
-      user: {
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-      },
+      state,
+      registerUser,
     }
   },
-  methods: {
-    registerUser() {
-      this.$axios
-        .post('http://localhost:3000/api/v1/auth', this.user)
-        .then((response) => {
-          window.location.href = '/'
-        })
-    },
-  },
-}
+})
 </script>
