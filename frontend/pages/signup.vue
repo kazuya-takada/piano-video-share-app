@@ -9,24 +9,24 @@
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <v-text-field
-            v-model="state.name"
+            v-model="user.name"
             prepend-icon="mdi-account"
             label="名前"
           />
           <v-text-field
-            v-model="state.email"
+            v-model="user.email"
             prepend-icon="mdi-email"
             label="メールアドレス"
           />
           <v-text-field
             type="password"
-            v-model="state.password"
+            v-model="user.password"
             prepend-icon="mdi-lock"
             label="パスワード"
           />
           <v-text-field
             type="password"
-            v-model="state.password_confirmation"
+            v-model="user.password_confirmation"
             prepend-icon="mdi-lock"
             label="パスワード確認"
           />
@@ -55,22 +55,19 @@ export default defineComponent({
     const { $http } = useContext()
     const router = useRouter()
 
-    interface State {
+    interface User {
       name: string
       email: string
       password: string
       password_confirmation: string
     }
 
-    const state = reactive<State>({
+    const user = reactive<User>({
       name: '',
       email: '',
       password: '',
       password_confirmation: '',
     })
-
-    // 入れ直さないと使えない？
-    const user: State = state
 
     const registerUser = () => {
       useAsync(() => {
@@ -80,7 +77,7 @@ export default defineComponent({
     }
 
     return {
-      state,
+      user,
       registerUser,
     }
   },
