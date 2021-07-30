@@ -10,12 +10,13 @@
         <v-form ref="form" lazy-validation>
           <SignupUserFormName v-model="user.name" />
           <SignupUserFormEmail v-model="user.email" />
-          <v-text-field
+          <SignupUserFormPassword v-model="user.password" />
+          <!-- <v-text-field
             type="password"
             v-model="user.password"
             prepend-icon="mdi-lock"
             label="パスワード"
-          />
+          /> -->
           <v-text-field
             type="password"
             v-model="user.password_confirmation"
