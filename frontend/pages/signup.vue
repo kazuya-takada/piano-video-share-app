@@ -8,11 +8,7 @@
       </v-card-title>
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <v-text-field
-            v-model="user.name"
-            prepend-icon="mdi-account"
-            label="名前"
-          />
+          <SignupUserFormName v-model="user.name" />
           <v-text-field
             v-model="user.email"
             prepend-icon="mdi-email"
