@@ -1,12 +1,11 @@
 <template>
   <v-text-field
-    type="text"
+    type="email"
     :value="value"
     :rules="rules"
-    :counter="max"
     @input="handleInput"
     prepend-icon="mdi-account"
-    label="名前"
+    label="メールアドレス"
   />
 </template>
 
@@ -25,17 +24,11 @@ export default defineComponent({
       context.emit('input', event)
     }
 
-    const max = 30
-
     return {
       handleInput,
-      max,
       rules: [
-        // ||の左側はバリデーションの成功。!!vはvalueが存在していること。
-        // ||の右側はバリデーションのメッセージ。
         (v: string) => !!v || '',
-        (v: string) =>
-          (!!v && max >= v.length) || `${max}文字以内で入力してください`,
+        (v: string) => /.+@.+\..+/.test(v) || '',
       ],
     }
   },
