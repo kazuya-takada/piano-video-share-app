@@ -8,20 +8,11 @@
       </v-card-title>
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <SignupUserFormName v-model="user.name" />
-          <SignupUserFormEmail v-model="user.email" />
-          <SignupUserFormPassword v-model="user.password" />
-          <!-- <v-text-field
-            type="password"
-            v-model="user.password"
-            prepend-icon="mdi-lock"
-            label="パスワード"
-          /> -->
-          <v-text-field
-            type="password"
+          <SignupFormName v-model="user.name" />
+          <SignupFormEmail v-model="user.email" />
+          <SignupFormPassword v-model="user.password" />
+          <SignupFormPasswordConfirmation
             v-model="user.password_confirmation"
-            prepend-icon="mdi-lock"
-            label="パスワード確認"
           />
           <v-card-actions>
             <v-btn color="#FF8A65" class="white--text" @click="registerUser">
