@@ -6,6 +6,33 @@
           ユーザー登録
         </h1>
       </v-card-title>
+      <v-alert
+        dense
+        text
+        type="error"
+        v-for="(error, index) in backendErrors.nameErrors"
+        :key="index"
+      >
+        {{ error }}
+      </v-alert>
+      <v-alert
+        dense
+        text
+        type="error"
+        v-for="(error, index) in backendErrors.emailErrors"
+        :key="index"
+      >
+        {{ error }}
+      </v-alert>
+      <v-alert
+        dense
+        text
+        type="error"
+        v-for="(error, index) in backendErrors.passwordErrors"
+        :key="index"
+      >
+        {{ error }}
+      </v-alert>
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <SignupFormName v-model="user.name" />
@@ -53,15 +80,35 @@ export default defineComponent({
       password_confirmation: '',
     })
 
+    const backendErrors = reactive<any>({
+      nameErrors: [],
+      emailErrors: [],
+      passwordErrors: [],
+    })
+
     const registerUser = () => {
       useAsync(() => {
-        $http.post('/api/v1/auth', user)
-        router.push('/')
+        $http.post('/api/v1/auth', user).catch((e) => {
+          const errors = e.response.data.errors
+
+          errors.name.forEach((error: string) => {
+            backendErrors.nameErrors.push(error)
+          })
+          errors.email.forEach((error: string) => {
+            backendErrors.emailErrors.push(error)
+          })
+          errors.password.forEach((error: string) => {
+            backendErrors.passwordErrors.push(error)
+          })
+
+          router.push('/signup')
+        })
       })
     }
 
     return {
       user,
+      backendErrors,
       registerUser,
     }
   },
