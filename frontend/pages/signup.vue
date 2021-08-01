@@ -62,20 +62,25 @@ export default defineComponent({
       password_confirmation: '',
     })
 
-    let backendErrors = reactive<any>([])
+    const backendErrors = reactive<string[]>([])
 
     const registerUser = () => {
+      // useAsyncって必要？
       useAsync(() => {
-        $http.post('/api/v1/auth', user).catch((e) => {
-          const errors = e.response.data.errors
-
-          // 単純に追加だとNG。更新にしたいため、以下の書き方にしたが...
-          backendErrors.length = 0
-          errors.forEach((error: string) => {
-            backendErrors.push(error)
+        $http
+          .post('/api/v1/auth', user)
+          .then(() => {
+            router.push('/')
           })
-          router.push('/signup')
-        })
+          .catch((e) => {
+            const errors = e.response.data.errors
+
+            // 単純に追加だとNG。更新にしたいため、以下の書き方にしたが...
+            backendErrors.length = 0
+            errors.forEach((error: string) => {
+              backendErrors.push(error)
+            })
+          })
       })
     }
 
