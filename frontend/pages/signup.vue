@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-card width="500px" class="mx-auto mt-5">
+    <v-card width="500px" class="mx-auto mt-5" elevation="1">
       <v-card-title>
-        <h1 class="display-1">
+        <h1 class="headline">
           ユーザー登録
         </h1>
       </v-card-title>
@@ -24,7 +24,7 @@
             v-model="user.password_confirmation"
           />
           <v-card-actions>
-            <v-btn color="#FF8A65" class="white--text" @click="registerUser">
+            <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規登録
             </v-btn>
           </v-card-actions>
