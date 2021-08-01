@@ -10,7 +10,7 @@
         dense
         text
         type="error"
-        v-for="(error, index) in backendErrors"
+        v-for="(error, index) in errorMessages.backendErrors"
         :key="index"
       >
         {{ error }}
@@ -62,7 +62,15 @@ export default defineComponent({
       password_confirmation: '',
     })
 
-    const backendErrors = reactive<string[]>([])
+    const mockBadckendErrors: string[] = []
+
+    interface ErrorMessages {
+      backendErrors: string[]
+    }
+
+    const errorMessages = reactive<ErrorMessages>({
+      backendErrors: mockBadckendErrors,
+    })
 
     const registerUser = () => {
       // useAsyncって必要？
@@ -74,19 +82,14 @@ export default defineComponent({
           })
           .catch((e) => {
             const errors = e.response.data.errors
-
-            // 単純に追加だとNG。更新にしたいため、以下の書き方にしたが...
-            backendErrors.length = 0
-            errors.forEach((error: string) => {
-              backendErrors.push(error)
-            })
+            errorMessages.backendErrors = errors
           })
       })
     }
 
     return {
       user,
-      backendErrors,
+      errorMessages,
       registerUser,
     }
   },

@@ -42,7 +42,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, useContext, onMounted } from '@nuxtjs/composition-api'
 
-export default defineComponent({})
+export default defineComponent({
+  setup() {
+    const { $http } = useContext()
+
+    onMounted(() => {})
+  },
+})
 </script>
