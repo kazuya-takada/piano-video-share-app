@@ -4,7 +4,7 @@
     :value="value"
     :rules="rules"
     @input="handleInput"
-    prepend-icon="mdi-account"
+    prepend-icon="mdi-email"
     label="メールアドレス"
   />
 </template>

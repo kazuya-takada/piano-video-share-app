@@ -4,7 +4,7 @@
     :value="value"
     :rules="rules"
     @input="handleInput"
-    prepend-icon="mdi-account"
+    prepend-icon="mdi-lock"
     label="パスワード"
   />
 </template>

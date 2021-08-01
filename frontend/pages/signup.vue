@@ -6,6 +6,15 @@
           ユーザー登録
         </h1>
       </v-card-title>
+      <v-alert
+        dense
+        text
+        type="error"
+        v-for="(error, index) in backendErrors"
+        :key="index"
+      >
+        {{ error }}
+      </v-alert>
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <SignupFormName v-model="user.name" />
@@ -53,15 +62,31 @@ export default defineComponent({
       password_confirmation: '',
     })
 
+    const backendErrors = reactive<string[]>([])
+
     const registerUser = () => {
+      // useAsyncって必要？
       useAsync(() => {
-        $http.post('/api/v1/auth', user)
-        router.push('/')
+        $http
+          .post('/api/v1/auth', user)
+          .then(() => {
+            router.push('/')
+          })
+          .catch((e) => {
+            const errors = e.response.data.errors
+
+            // 単純に追加だとNG。更新にしたいため、以下の書き方にしたが...
+            backendErrors.length = 0
+            errors.forEach((error: string) => {
+              backendErrors.push(error)
+            })
+          })
       })
     }
 
     return {
       user,
+      backendErrors,
       registerUser,
     }
   },
