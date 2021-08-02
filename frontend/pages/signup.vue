@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-card width="500px" class="mx-auto mt-5">
+    <v-card width="500px" class="mx-auto mt-5" elevation="1">
       <v-card-title>
-        <h1 class="display-1">
+        <h1 class="headline">
           ユーザー登録
         </h1>
       </v-card-title>
@@ -10,7 +10,7 @@
         dense
         text
         type="error"
-        v-for="(error, index) in backendErrors"
+        v-for="(error, index) in errorMessages.backendErrors"
         :key="index"
       >
         {{ error }}
@@ -24,7 +24,7 @@
             v-model="user.password_confirmation"
           />
           <v-card-actions>
-            <v-btn color="#FF8A65" class="white--text" @click="registerUser">
+            <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規登録
             </v-btn>
           </v-card-actions>
@@ -62,7 +62,15 @@ export default defineComponent({
       password_confirmation: '',
     })
 
-    const backendErrors = reactive<string[]>([])
+    const mockBadckendErrors: string[] = []
+
+    interface ErrorMessages {
+      backendErrors: string[]
+    }
+
+    const errorMessages = reactive<ErrorMessages>({
+      backendErrors: mockBadckendErrors,
+    })
 
     const registerUser = () => {
       // useAsyncって必要？
@@ -74,19 +82,14 @@ export default defineComponent({
           })
           .catch((e) => {
             const errors = e.response.data.errors
-
-            // 単純に追加だとNG。更新にしたいため、以下の書き方にしたが...
-            backendErrors.length = 0
-            errors.forEach((error: string) => {
-              backendErrors.push(error)
-            })
+            errorMessages.backendErrors = errors
           })
       })
     }
 
     return {
       user,
-      backendErrors,
+      errorMessages,
       registerUser,
     }
   },
