@@ -3,7 +3,7 @@
     <v-card width="500px" class="mx-auto mt-5" elevation="1">
       <v-card-title>
         <h1 class="headline">
-          ユーザー登録
+          ログイン
         </h1>
       </v-card-title>
       <v-alert
@@ -17,13 +17,11 @@
       </v-alert>
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <UserFormName v-model="user.name" />
           <UserFormEmail v-model="user.email" />
           <UserFormPassword v-model="user.password" />
-          <UserFormPasswordConfirmation v-model="user.password_confirmation" />
-          <v-card-actions>
+          <v-card-actions class="mt-3">
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
-              新規登録
+              ログイン
             </v-btn>
           </v-card-actions>
         </v-form>
