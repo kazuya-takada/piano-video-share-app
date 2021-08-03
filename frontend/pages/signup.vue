@@ -73,18 +73,15 @@ export default defineComponent({
     })
 
     const registerUser = () => {
-      // useAsyncって必要？
-      useAsync(() => {
-        $http
-          .post('/api/v1/auth', user)
-          .then(() => {
-            router.push('/')
-          })
-          .catch((e) => {
-            const errors = e.response.data.errors
-            errorMessages.backendErrors = errors
-          })
-      })
+      $http
+        .post('/api/v1/auth', user)
+        .then(() => {
+          router.push('/')
+        })
+        .catch((e) => {
+          const errors = e.response.data.errors
+          errorMessages.backendErrors = errors
+        })
     }
 
     return {
