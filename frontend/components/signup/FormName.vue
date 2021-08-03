@@ -1,7 +1,6 @@
 <template>
   <v-text-field
     type="text"
-    :value="value"
     :rules="rules"
     :counter="max"
     @input="handleInput"
@@ -14,12 +13,6 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  props: {
-    value: {
-      type: String,
-      default: '',
-    },
-  },
   setup(_, context) {
     const handleInput = (event: Event) => {
       context.emit('input', event)

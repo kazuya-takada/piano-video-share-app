@@ -10,7 +10,7 @@
           <v-btn color="#6abe83" class="white--text mr-3">
             編集
           </v-btn>
-          <v-btn color="#f06966" class="white--text">
+          <v-btn color="#f06966" class="white--text" @click="deleteUser">
             削除
           </v-btn>
         </v-card-actions>
@@ -39,14 +39,17 @@ import {
   defineComponent,
   useContext,
   useRoute,
+  useRouter,
   reactive,
   useFetch,
+  useAsync,
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const { $http } = useContext()
+    const { $http, $axios } = useContext()
     const route = useRoute()
+    const router = useRouter()
 
     const id = Number(route.value.params.id)
 
@@ -73,13 +76,21 @@ export default defineComponent({
     })
 
     useFetch(async () => {
-      const gotUser: User = await $http.$get(`/api/v1/users/${id}`)
-      user.name = gotUser.name
-      user.email = gotUser.email
+      try {
+        const gotUser: User = await $http.$get(`/api/v1/users/${id}`)
+        user.name = gotUser.name
+        user.email = gotUser.email
+        user.uid = gotUser.uid
+      } catch (e) {
+        console.log(e)
+      }
     })
+
+    const deleteUser = () => {}
 
     return {
       user,
+      deleteUser,
     }
   },
 })
