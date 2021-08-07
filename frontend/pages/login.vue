@@ -6,7 +6,7 @@
           ログイン
         </h1>
       </v-card-title>
-      <!-- <v-alert
+      <v-alert
         dense
         text
         type="error"
@@ -14,7 +14,7 @@
         :key="index"
       >
         {{ error }}
-      </v-alert> -->
+      </v-alert>
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormEmail v-model="user.email" />
@@ -68,7 +68,6 @@ export default defineComponent({
     })
 
     const login = async () => {
-      console.log('kazuya')
       await $auth
         .loginWith('local', {
           data: {
@@ -77,15 +76,17 @@ export default defineComponent({
           },
         })
         .then((response: any) => {
-          console.log(response)
           localStorage.setItem('access-token', response.headers['access-token'])
           localStorage.setItem('client', response.headers.client)
           localStorage.setItem('uid', response.headers.uid)
           localStorage.setItem('token-type', response.headers['token-type'])
-          return response
+          // router.pushなくても良さそうだが...
+          router.push('/')
         })
         .catch((e) => {
-          console.log(e)
+          console.log(e.response)
+          const errors = e.response.data.errors
+          errorMessages.backendErrors = errors
         })
     }
 

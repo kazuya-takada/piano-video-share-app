@@ -42,7 +42,7 @@ import {
 
 export default defineComponent({
   setup() {
-    const { $http } = useContext()
+    const { $http, $auth } = useContext()
     const router = useRouter()
 
     interface User {
@@ -69,14 +69,24 @@ export default defineComponent({
       backendErrors: mockBadckendErrors,
     })
 
-    const registerUser = () => {
-      $http
-        .post('/api/v1/auth', user)
-        .then(() => {
+    const registerUser = async () => {
+      await $http.post('/api/v1/auth', user)
+      await $auth
+        .loginWith('local', {
+          data: {
+            email: user.email,
+            password: user.password,
+          },
+        })
+        .then((response: any) => {
+          localStorage.setItem('access-token', response.headers['access-token'])
+          localStorage.setItem('client', response.headers.client)
+          localStorage.setItem('uid', response.headers.uid)
+          localStorage.setItem('token-type', response.headers['token-type'])
           router.push('/')
         })
         .catch((e) => {
-          const errors = e.response.data.errors
+          const errors = e.response.data.errors.full_messages
           errorMessages.backendErrors = errors
         })
     }
