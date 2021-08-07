@@ -6,7 +6,7 @@
           ログイン
         </h1>
       </v-card-title>
-      <v-alert
+      <!-- <v-alert
         dense
         text
         type="error"
@@ -14,13 +14,13 @@
         :key="index"
       >
         {{ error }}
-      </v-alert>
+      </v-alert> -->
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormEmail v-model="user.email" />
           <UserFormPassword v-model="user.password" />
           <v-card-actions class="mt-3">
-            <v-btn color="#6abe83" class="white--text" @click="registerUser">
+            <v-btn color="#6abe83" class="white--text" @click="login">
               ログイン
             </v-btn>
           </v-card-actions>
@@ -40,7 +40,7 @@ import {
 
 export default defineComponent({
   setup() {
-    const { $http } = useContext()
+    const { $auth } = useContext()
     const router = useRouter()
 
     interface User {
@@ -67,22 +67,32 @@ export default defineComponent({
       backendErrors: mockBadckendErrors,
     })
 
-    const registerUser = () => {
-      $http
-        .post('/api/v1/auth', user)
-        .then(() => {
-          router.push('/')
+    const login = async () => {
+      console.log('kazuya')
+      await $auth
+        .loginWith('local', {
+          data: {
+            email: user.email,
+            password: user.password,
+          },
+        })
+        .then((response: any) => {
+          console.log(response)
+          localStorage.setItem('access-token', response.headers['access-token'])
+          localStorage.setItem('client', response.headers.client)
+          localStorage.setItem('uid', response.headers.uid)
+          localStorage.setItem('token-type', response.headers['token-type'])
+          return response
         })
         .catch((e) => {
-          const errors = e.response.data.errors
-          errorMessages.backendErrors = errors
+          console.log(e)
         })
     }
 
     return {
       user,
       errorMessages,
-      registerUser,
+      login,
     }
   },
 })
