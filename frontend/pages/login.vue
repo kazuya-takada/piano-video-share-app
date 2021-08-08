@@ -80,8 +80,7 @@ export default defineComponent({
           localStorage.setItem('client', response.headers.client)
           localStorage.setItem('uid', response.headers.uid)
           localStorage.setItem('token-type', response.headers['token-type'])
-          // router.pushなくても良さそうだが...
-          router.push('/')
+          console.log($auth.loggedIn)
         })
         .catch((e) => {
           console.log(e.response)
