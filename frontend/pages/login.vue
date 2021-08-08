@@ -80,10 +80,8 @@ export default defineComponent({
           localStorage.setItem('client', response.headers.client)
           localStorage.setItem('uid', response.headers.uid)
           localStorage.setItem('token-type', response.headers['token-type'])
-          console.log($auth.loggedIn)
         })
         .catch((e) => {
-          console.log(e.response)
           const errors = e.response.data.errors
           errorMessages.backendErrors = errors
         })
