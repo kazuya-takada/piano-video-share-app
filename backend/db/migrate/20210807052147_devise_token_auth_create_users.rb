@@ -36,8 +36,8 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[6.0]
       # t.datetime :locked_at
 
       ## User Info
-      t.string :name
-      t.string :email
+      t.string :name, limit: 30
+      t.string :email, limit: 72
 
       ## Tokens
       t.text :tokens

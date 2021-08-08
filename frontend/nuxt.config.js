@@ -46,7 +46,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
-    '@nuxtjs/auth',
+    '@nuxtjs/auth-next',
     '@nuxt/http',
   ],
 
@@ -85,17 +85,17 @@ export default {
       login: '/login',
       logout: '/',
       callback: false,
-      home: '/users',
+      home: '/',
     },
     strategies: {
       local: {
         endpoints: {
           login: {
-            url: '/api/v1/auth/login',
+            url: '/api/v1/auth/sign_in',
             method: 'post',
             propertyName: 'token',
           },
-          logout: { url: '/api/v1/auth/logout', method: 'post' },
+          logout: { url: '/api/v1/auth/sign_out', method: 'post' },
           user: false,
         },
       },
