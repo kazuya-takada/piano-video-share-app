@@ -46,7 +46,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
-    '@nuxtjs/auth-next',
+    '@nuxtjs/auth',
     '@nuxt/http',
   ],
 
@@ -59,7 +59,9 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost:3000',
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -93,10 +95,15 @@ export default {
           login: {
             url: '/api/v1/auth/sign_in',
             method: 'post',
-            propertyName: 'token',
+            propertyName: 'access_token',
           },
-          logout: { url: '/api/v1/auth/sign_out', method: 'post' },
+          logout: false,
           user: false,
+          // {
+          //   url: '/api/v1/auth/',
+          //   method: 'get',
+          //   propertyName: 'user',
+          // },
         },
       },
     },

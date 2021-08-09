@@ -1,10 +1,14 @@
 import { DeepReadonly } from '@nuxtjs/composition-api'
 
 export interface User {
-  name: string
+  allow_password_change: boolean
+  created_at: string
   email: string
-  password: string
-  password_confirmation: string
+  id: number
+  name: string
+  provider: string
+  uid: string
+  updated_at: string
 }
 
 export interface UseUser {

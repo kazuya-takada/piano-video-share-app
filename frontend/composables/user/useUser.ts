@@ -2,10 +2,14 @@ import { reactive, readonly } from '@nuxtjs/composition-api'
 import { User, UseUser } from '@/composables/user/userTypes'
 
 const user = reactive<User>({
-  name: '',
+  allow_password_change: false,
+  created_at: '',
   email: '',
-  password: '',
-  password_confirmation: '',
+  id: 0,
+  name: '',
+  provider: '',
+  uid: '',
+  updated_at: '',
 })
 
 const useUser: UseUser = {

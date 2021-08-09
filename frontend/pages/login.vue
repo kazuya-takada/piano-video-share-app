@@ -35,13 +35,12 @@ import {
   defineComponent,
   reactive,
   useContext,
-  useRouter,
+  inject,
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
     const { $auth } = useContext()
-    const router = useRouter()
 
     interface User {
       name: string
@@ -80,11 +79,8 @@ export default defineComponent({
           localStorage.setItem('client', response.headers.client)
           localStorage.setItem('uid', response.headers.uid)
           localStorage.setItem('token-type', response.headers['token-type'])
-          // router.pushなくても良さそうだが...
-          router.push('/')
         })
         .catch((e) => {
-          console.log(e.response)
           const errors = e.response.data.errors
           errorMessages.backendErrors = errors
         })

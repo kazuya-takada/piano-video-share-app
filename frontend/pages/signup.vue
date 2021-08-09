@@ -83,7 +83,6 @@ export default defineComponent({
           localStorage.setItem('client', response.headers.client)
           localStorage.setItem('uid', response.headers.uid)
           localStorage.setItem('token-type', response.headers['token-type'])
-          router.push('/')
         })
         .catch((e) => {
           const errors = e.response.data.errors.full_messages

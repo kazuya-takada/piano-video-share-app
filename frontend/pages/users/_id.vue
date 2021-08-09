@@ -42,12 +42,11 @@ import {
   useRouter,
   reactive,
   useFetch,
-  useAsync,
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
-    const { $http, $axios } = useContext()
+    const { $http } = useContext()
     const route = useRoute()
     const router = useRouter()
 
