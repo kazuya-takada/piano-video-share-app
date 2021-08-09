@@ -35,13 +35,12 @@ import {
   defineComponent,
   reactive,
   useContext,
-  useRouter,
+  inject,
 } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
     const { $auth } = useContext()
-    const router = useRouter()
 
     interface User {
       name: string

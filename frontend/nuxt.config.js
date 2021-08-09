@@ -99,6 +99,11 @@ export default {
           },
           logout: false,
           user: false,
+          // {
+          //   url: '/api/v1/auth/',
+          //   method: 'get',
+          //   propertyName: 'user',
+          // },
         },
       },
     },
