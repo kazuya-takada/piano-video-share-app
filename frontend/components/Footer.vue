@@ -1,13 +1,7 @@
 <template>
-  <v-app dark>
-    <Header />
-    <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
-    </v-main>
-    <Footer />
-  </v-app>
+  <v-footer color="#6abe83" app dark>
+    <span>&copy; {{ new Date().getFullYear() }}</span>
+  </v-footer>
 </template>
 
 <script lang="ts">
