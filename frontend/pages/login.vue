@@ -31,12 +31,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  useContext,
-  inject,
-} from '@nuxtjs/composition-api'
+import { defineComponent, reactive, useContext } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {

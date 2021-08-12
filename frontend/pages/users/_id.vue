@@ -4,6 +4,7 @@
       <v-card-title>
         <h1 class="headline">
           プロフィール
+          {{ user }}
         </h1>
         <v-spacer></v-spacer>
         <v-card-actions>
@@ -39,51 +40,54 @@ import {
   defineComponent,
   useContext,
   useRoute,
-  useRouter,
   reactive,
   useFetch,
+  inject,
 } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup() {
     const { $http } = useContext()
     const route = useRoute()
-    const router = useRouter()
 
-    const id = Number(route.value.params.id)
+    const { user } = inject(userKey) as UseUser
 
-    interface User {
-      allow_password_change: boolean
-      created_at: string
-      email: string
-      id: number
-      name: string
-      provider: string
-      uid: string
-      updated_at: string
-    }
+    // const id = Number(route.value.params.id)
 
-    const user = reactive<User>({
-      allow_password_change: false,
-      created_at: '',
-      email: '',
-      id: 0,
-      name: '',
-      provider: '',
-      uid: '',
-      updated_at: '',
-    })
+    // interface User {
+    //   allow_password_change: boolean
+    //   created_at: string
+    //   email: string
+    //   id: number
+    //   name: string
+    //   provider: string
+    //   uid: string
+    //   updated_at: string
+    // }
 
-    useFetch(async () => {
-      try {
-        const gotUser: User = await $http.$get(`/api/v1/users/${id}`)
-        user.name = gotUser.name
-        user.email = gotUser.email
-        user.uid = gotUser.uid
-      } catch (e) {
-        console.log(e)
-      }
-    })
+    // const user = reactive<User>({
+    //   allow_password_change: false,
+    //   created_at: '',
+    //   email: '',
+    //   id: 0,
+    //   name: '',
+    //   provider: '',
+    //   uid: '',
+    //   updated_at: '',
+    // })
+
+    // useFetch(async () => {
+    //   try {
+    //     const gotUser: User = await $http.$get(`/api/v1/users/${id}`)
+    //     user.name = gotUser.name
+    //     user.email = gotUser.email
+    //     user.uid = gotUser.uid
+    //   } catch (e) {
+    //     console.log(e)
+    //   }
+    // })
 
     const deleteUser = () => {}
 

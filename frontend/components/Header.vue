@@ -13,7 +13,13 @@
       <v-btn text to="/login" nuxt v-if="!$auth.loggedIn">
         ログイン
       </v-btn>
-      <v-btn text :to="`/users/${user.id}`" nuxt v-if="$auth.loggedIn">
+      <v-btn
+        text
+        :to="`/users/${user.id}`"
+        nuxt
+        v-if="$auth.loggedIn"
+        @click="test"
+      >
         プロフィール
       </v-btn>
       <v-btn text v-if="$auth.loggedIn" @click="logout">
@@ -24,43 +30,15 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  useContext,
-  reactive,
-  useFetch,
-} from '@nuxtjs/composition-api'
+import { defineComponent, useContext, inject } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup() {
-    const { $auth, $axios } = useContext()
+    const { $auth } = useContext()
 
-    interface User {
-      id: number
-    }
-
-    const user = reactive<User>({
-      id: 0,
-    })
-
-    useFetch(async () => {
-      try {
-        const currentUser = await $axios.$get('/api/v1/users', {
-          headers: {
-            'access-token': localStorage.getItem('access-token'),
-            client: localStorage.getItem('client'),
-            uid: localStorage.getItem('uid'),
-            'token-type': localStorage.getItem('token-type'),
-          },
-        })
-        user.id = currentUser.id
-        console.log('kazuya')
-        console.log(currentUser)
-        console.log(user.id)
-      } catch (e) {
-        console.log(e)
-      }
-    })
+    const { user } = inject(userKey) as UseUser
 
     const logout = async () => {
       await $auth

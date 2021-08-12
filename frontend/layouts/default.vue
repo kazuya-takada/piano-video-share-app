@@ -11,7 +11,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, provide } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import useUser from '@/store/user/useUser'
 
-export default defineComponent({})
+export default defineComponent({
+  setup() {
+    provide(userKey, useUser)
+  },
+})
 </script>

@@ -8,6 +8,7 @@
       <v-card>
         <v-card-title class="headline">
           投稿一覧ページ（予定）
+          {{ user }}
         </v-card-title>
         <v-card-text>
           <p>
@@ -84,3 +85,46 @@
     </v-col>
   </v-row>
 </template>
+
+<script lang="ts">
+import {
+  defineComponent,
+  useContext,
+  reactive,
+  useFetch,
+  inject,
+} from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
+
+export default defineComponent({
+  setup() {
+    const { $axios } = useContext()
+
+    const { user, setUserId } = inject(userKey) as UseUser
+
+    useFetch(async () => {
+      try {
+        const currentUser = await $axios.$get('/api/v1/users', {
+          headers: {
+            'access-token': localStorage.getItem('access-token'),
+            client: localStorage.getItem('client'),
+            uid: localStorage.getItem('uid'),
+            'token-type': localStorage.getItem('token-type'),
+          },
+        })
+        setUserId(currentUser.id)
+        console.log('kazuya')
+        console.log(currentUser)
+        console.log(user.id)
+      } catch (e) {
+        console.log(e)
+      }
+    })
+
+    return {
+      user,
+    }
+  },
+})
+</script>
