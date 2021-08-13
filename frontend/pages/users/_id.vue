@@ -35,19 +35,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useFetch, inject } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  useContext,
+  useRouter,
+  inject,
+  useFetch,
+} from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup() {
-    const { user, fetchUser } = inject(userKey) as UseUser
+    const { $axios } = useContext()
+    const router = useRouter()
+
+    const { user, fetchUser, unsetUser } = inject(userKey) as UseUser
 
     useFetch(async () => {
       await fetchUser()
     })
 
-    const deleteUser = () => {}
+    const deleteUser = async () => {
+      await $axios
+        .$delete('/api/v1/auth', {
+          headers: {
+            'access-token': localStorage.getItem('access-token'),
+            client: localStorage.getItem('client'),
+            uid: localStorage.getItem('uid'),
+            'token-type': localStorage.getItem('token-type'),
+          },
+        })
+        .catch((e) => console.log(e))
+      await unsetUser()
+      router.push('/')
+    }
 
     return {
       user,
