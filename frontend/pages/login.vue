@@ -38,17 +38,13 @@ export default defineComponent({
     const { $auth } = useContext()
 
     interface User {
-      name: string
       email: string
       password: string
-      password_confirmation: string
     }
 
     const user = reactive<User>({
-      name: '',
       email: '',
       password: '',
-      password_confirmation: '',
     })
 
     const mockBadckendErrors: string[] = []
