@@ -16,6 +16,7 @@ import userKey from '@/store/user/userKey'
 import useUser from '@/store/user/useUser'
 
 export default defineComponent({
+  name: 'default',
   setup() {
     provide(userKey, useUser)
   },

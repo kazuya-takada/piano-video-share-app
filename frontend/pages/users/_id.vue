@@ -1,5 +1,22 @@
 <template>
   <v-container>
+    <v-dialog v-model="dialog.isDisplay" width="500">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          本当に削除しますか？
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#f06966" text @click="deleteUser">
+            削除する
+          </v-btn>
+          <v-btn color="#6abe83" text @click="dialog.isDisplay = false">
+            戻る
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-card width="800px" class="mx-auto mt-5" elevation="1">
       <v-card-title>
         <h1 class="headline">
@@ -10,7 +27,11 @@
           <v-btn color="#6abe83" class="white--text mr-3">
             編集
           </v-btn>
-          <v-btn color="#f06966" class="white--text" @click="deleteUser">
+          <v-btn
+            color="#f06966"
+            class="white--text"
+            @click="dialog.isDisplay = true"
+          >
             削除
           </v-btn>
         </v-card-actions>
@@ -38,19 +59,22 @@
 import {
   defineComponent,
   useContext,
-  useRouter,
   inject,
   useFetch,
+  reactive,
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup() {
-    const { $axios } = useContext()
-    const router = useRouter()
+    const { $axios, $auth } = useContext()
 
     const { user, fetchUser, unsetUser } = inject(userKey) as UseUser
+
+    const dialog = reactive({
+      isDisplay: false,
+    })
 
     useFetch(async () => {
       await fetchUser()
@@ -68,11 +92,22 @@ export default defineComponent({
         })
         .catch((e) => console.log(e))
       await unsetUser()
-      router.push('/')
+      await $auth
+        .logout()
+        .then(() => {
+          localStorage.removeItem('access-token')
+          localStorage.removeItem('client')
+          localStorage.removeItem('uid')
+          localStorage.removeItem('token-type')
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     }
 
     return {
       user,
+      dialog,
       deleteUser,
     }
   },
