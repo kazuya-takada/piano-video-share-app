@@ -31,29 +31,20 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  useContext,
-  inject,
-} from '@nuxtjs/composition-api'
+import { defineComponent, reactive, useContext } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   setup() {
     const { $auth } = useContext()
 
     interface User {
-      name: string
       email: string
       password: string
-      password_confirmation: string
     }
 
     const user = reactive<User>({
-      name: '',
       email: '',
       password: '',
-      password_confirmation: '',
     })
 
     const mockBadckendErrors: string[] = []

@@ -35,54 +35,16 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  useContext,
-  useRoute,
-  useRouter,
-  reactive,
-  useFetch,
-} from '@nuxtjs/composition-api'
+import { defineComponent, useFetch, inject } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup() {
-    const { $http } = useContext()
-    const route = useRoute()
-    const router = useRouter()
-
-    const id = Number(route.value.params.id)
-
-    interface User {
-      allow_password_change: boolean
-      created_at: string
-      email: string
-      id: number
-      name: string
-      provider: string
-      uid: string
-      updated_at: string
-    }
-
-    const user = reactive<User>({
-      allow_password_change: false,
-      created_at: '',
-      email: '',
-      id: 0,
-      name: '',
-      provider: '',
-      uid: '',
-      updated_at: '',
-    })
+    const { user, fetchUser } = inject(userKey) as UseUser
 
     useFetch(async () => {
-      try {
-        const gotUser: User = await $http.$get(`/api/v1/users/${id}`)
-        user.name = gotUser.name
-        user.email = gotUser.email
-        user.uid = gotUser.uid
-      } catch (e) {
-        console.log(e)
-      }
+      await fetchUser()
     })
 
     const deleteUser = () => {}
