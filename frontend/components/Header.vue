@@ -30,11 +30,22 @@ import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup() {
-    const { $auth } = useContext()
+    const { $auth, $axios } = useContext()
 
-    const { user } = inject(userKey) as UseUser
+    const { user, unsetUser } = inject(userKey) as UseUser
 
     const logout = async () => {
+      await $axios
+        .delete('/api/v1/auth/sign_out', {
+          headers: {
+            'access-token': localStorage.getItem('access-token'),
+            client: localStorage.getItem('client'),
+            uid: localStorage.getItem('uid'),
+            'token-type': localStorage.getItem('token-type'),
+          },
+        })
+        .catch((e) => console.log(e))
+      await unsetUser()
       await $auth
         .logout()
         .then(() => {

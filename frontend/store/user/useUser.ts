@@ -30,9 +30,16 @@ const fetchUser = async () => {
   }
 }
 
+const unsetUser = () => {
+  user.id = 0
+  user.name = ''
+  user.email = ''
+}
+
 const useUser: UseUser = {
   user: readonly(user),
   fetchUser,
+  unsetUser,
 }
 
 export default useUser

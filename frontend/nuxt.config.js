@@ -97,6 +97,11 @@ export default {
             method: 'post',
             propertyName: 'access_token',
           },
+          // methodがdeleteにならず、postになる
+          // logout: {
+          //   url: '/api/v1/auth/sign_out',
+          //   method: 'delete',
+          // },
           logout: false,
           user: false,
           // {

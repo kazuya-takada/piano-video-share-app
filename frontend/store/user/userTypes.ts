@@ -9,4 +9,5 @@ export interface User {
 export interface UseUser {
   user: DeepReadonly<User>
   fetchUser: () => void
+  unsetUser: () => void
 }
