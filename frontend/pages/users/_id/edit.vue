@@ -44,6 +44,8 @@ import {
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
+import flashKey from '@/store/flash/flashKey'
+import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   setup() {
@@ -51,6 +53,7 @@ export default defineComponent({
     const router = useRouter()
 
     const { user, fetchUser } = inject(userKey) as UseUser
+    const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     useFetch(async () => {
       await fetchUser()
@@ -86,6 +89,7 @@ export default defineComponent({
         })
         .then(() => {
           router.push(`/users/${user.id}/show`)
+          displayFlashMessage('編集')
         })
         .catch((e) => {
           // devise_token_authのユーザーアップデートのエラーメッセージがどうしても上手くいかないため、下記の通り記述。

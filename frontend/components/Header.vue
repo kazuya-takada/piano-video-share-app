@@ -27,12 +27,15 @@
 import { defineComponent, useContext, inject } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
+import flashKey from '@/store/flash/flashKey'
+import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   setup() {
     const { $auth, $axios } = useContext()
 
     const { user, unsetUser } = inject(userKey) as UseUser
+    const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     const logout = async () => {
       await $axios
@@ -53,6 +56,7 @@ export default defineComponent({
           localStorage.removeItem('client')
           localStorage.removeItem('uid')
           localStorage.removeItem('token-type')
+          displayFlashMessage('ログアウト')
         })
         .catch((e) => {
           console.log(e)

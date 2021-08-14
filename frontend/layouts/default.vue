@@ -3,6 +3,7 @@
     <Header />
     <v-main>
       <v-container>
+        <FlashMessage />
         <Nuxt />
       </v-container>
     </v-main>
@@ -14,11 +15,14 @@
 import { defineComponent, provide } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import useUser from '@/store/user/useUser'
+import flashKey from '@/store/flash/flashKey'
+import useFlash from '@/store/flash/useFlash'
 
 export default defineComponent({
   name: 'default',
   setup() {
     provide(userKey, useUser)
+    provide(flashKey, useFlash)
   },
 })
 </script>

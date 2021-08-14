@@ -22,6 +22,8 @@
 import { defineComponent, useContext, inject } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
+import flashKey from '@/store/flash/flashKey'
+import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   props: {
@@ -35,6 +37,7 @@ export default defineComponent({
     const { $axios, $auth } = useContext()
 
     const { unsetUser } = inject(userKey) as UseUser
+    const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     const deleteUser = async () => {
       await $axios
@@ -55,6 +58,7 @@ export default defineComponent({
           localStorage.removeItem('client')
           localStorage.removeItem('uid')
           localStorage.removeItem('token-type')
+          displayFlashMessage('削除')
         })
         .catch((e) => {
           console.log(e)
