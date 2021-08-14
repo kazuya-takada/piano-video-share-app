@@ -18,6 +18,7 @@ import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
+  auth: false,
   setup() {
     const { user, fetchUser } = inject(userKey) as UseUser
 
