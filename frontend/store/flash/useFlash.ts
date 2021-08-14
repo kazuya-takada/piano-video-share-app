@@ -6,10 +6,6 @@ const flashMessage = reactive<FlashMessage>({
   message: '',
 })
 
-// const setFlashMessage = (message: string) => {
-//   flashMessage.message = message
-// }
-
 const displayFlashMessage = (message: string) => {
   flashMessage.message = message
   flashMessage.display = true
