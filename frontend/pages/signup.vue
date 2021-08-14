@@ -35,15 +35,18 @@
 <script lang="ts">
 import {
   defineComponent,
-  reactive,
   useContext,
-  useRouter,
+  inject,
+  reactive,
 } from '@nuxtjs/composition-api'
+import flashKey from '@/store/flash/flashKey'
+import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   setup() {
     const { $http, $auth } = useContext()
-    const router = useRouter()
+
+    const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     interface User {
       name: string
@@ -88,6 +91,7 @@ export default defineComponent({
               localStorage.setItem('client', response.headers.client)
               localStorage.setItem('uid', response.headers.uid)
               localStorage.setItem('token-type', response.headers['token-type'])
+              displayFlashMessage()
             })
             .catch((e) => console.log(e))
         })
