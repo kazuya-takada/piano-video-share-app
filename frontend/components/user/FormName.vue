@@ -3,6 +3,7 @@
     type="text"
     :rules="rules"
     :counter="max"
+    :value="user.name"
     @input="handleInput"
     prepend-icon="mdi-account"
     label="名前"
@@ -10,10 +11,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, inject } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
   setup(_, context) {
+    const { user } = inject(userKey) as UseUser
+
     const handleInput = (event: Event) => {
       context.emit('input', event)
     }
@@ -21,6 +26,7 @@ export default defineComponent({
     const max = 30
 
     return {
+      user,
       handleInput,
       max,
       rules: [

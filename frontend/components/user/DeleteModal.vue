@@ -1,26 +1,21 @@
 <template>
-  <v-app-bar color="#6abe83" app dark>
-    <v-toolbar-title>
-      <v-btn text to="/" nuxt class="title font-weight-bold">
-        ピアノ動画シェア（仮）
-      </v-btn>
-    </v-toolbar-title>
-    <v-spacer></v-spacer>
-    <v-toolbar-items>
-      <v-btn text to="/signup" nuxt v-if="!$auth.loggedIn">
-        新規登録
-      </v-btn>
-      <v-btn text to="/login" nuxt v-if="!$auth.loggedIn">
-        ログイン
-      </v-btn>
-      <v-btn text :to="`/users/${user.id}/show`" nuxt v-if="$auth.loggedIn">
-        プロフィール
-      </v-btn>
-      <v-btn text v-if="$auth.loggedIn" @click="logout">
-        ログアウト
-      </v-btn>
-    </v-toolbar-items>
-  </v-app-bar>
+  <v-dialog v-model="dialog.isDisplay" width="500">
+    <v-card>
+      <v-card-title class="text-h5 grey lighten-2">
+        本当に削除しますか？
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="#f06966" text @click="deleteUser">
+          削除する
+        </v-btn>
+        <v-btn color="#6abe83" text @click="dialog.isDisplay = false">
+          戻る
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -29,14 +24,21 @@ import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 
 export default defineComponent({
+  props: {
+    dialog: {
+      type: Object,
+      required: true,
+    },
+  },
+
   setup() {
-    const { $auth, $axios } = useContext()
+    const { $axios, $auth } = useContext()
 
-    const { user, unsetUser } = inject(userKey) as UseUser
+    const { unsetUser } = inject(userKey) as UseUser
 
-    const logout = async () => {
+    const deleteUser = async () => {
       await $axios
-        .delete('/api/v1/auth/sign_out', {
+        .$delete('/api/v1/auth', {
           headers: {
             'access-token': localStorage.getItem('access-token'),
             client: localStorage.getItem('client'),
@@ -60,8 +62,7 @@ export default defineComponent({
     }
 
     return {
-      user,
-      logout,
+      deleteUser,
     }
   },
 })

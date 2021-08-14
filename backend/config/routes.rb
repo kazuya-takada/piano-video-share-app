@@ -5,7 +5,6 @@ Rails.application.routes.draw do
         registrations: "api/v1/auth/registrations"
       }
 			resources :users, only: [:index, :show]
-      get '/users/kazuya', to: 'users#kazuya'
     end
   end
 end
