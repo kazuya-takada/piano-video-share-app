@@ -50,8 +50,12 @@ export default {
     '@nuxt/http',
   ],
 
+  // http: {
+  //   proxy: true,
+  // },
+
   http: {
-    proxy: true,
+    baseURL: 'http://localhost:3000',
   },
 
   proxy: {

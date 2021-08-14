@@ -70,22 +70,29 @@ export default defineComponent({
     })
 
     const registerUser = async () => {
-      await $http.post('/api/v1/auth', user)
-      await $auth
-        .loginWith('local', {
-          data: {
-            email: user.email,
-            password: user.password,
-          },
-        })
-        .then((response: any) => {
-          localStorage.setItem('access-token', response.headers['access-token'])
-          localStorage.setItem('client', response.headers.client)
-          localStorage.setItem('uid', response.headers.uid)
-          localStorage.setItem('token-type', response.headers['token-type'])
+      await $http
+        .post('/api/v1/auth', user)
+        .then(async () => {
+          await $auth
+            .loginWith('local', {
+              data: {
+                email: user.email,
+                password: user.password,
+              },
+            })
+            .then((response: any) => {
+              localStorage.setItem(
+                'access-token',
+                response.headers['access-token'],
+              )
+              localStorage.setItem('client', response.headers.client)
+              localStorage.setItem('uid', response.headers.uid)
+              localStorage.setItem('token-type', response.headers['token-type'])
+            })
+            .catch((e) => console.log(e))
         })
         .catch((e) => {
-          const errors = e.response.data.errors.full_messages
+          const errors = e.response.data.errors
           errorMessages.backendErrors = errors
         })
     }
