@@ -8,7 +8,12 @@
         </h1>
         <v-spacer></v-spacer>
         <v-card-actions>
-          <v-btn color="#6abe83" class="white--text mr-3">
+          <v-btn
+            color="#6abe83"
+            class="white--text mr-3"
+            :to="`/users/${user.id}/edit`"
+            nuxt
+          >
             編集
           </v-btn>
           <v-btn

@@ -13,7 +13,7 @@
       <v-btn text to="/login" nuxt v-if="!$auth.loggedIn">
         ログイン
       </v-btn>
-      <v-btn text :to="`/users/${user.id}`" nuxt v-if="$auth.loggedIn">
+      <v-btn text :to="`/users/${user.id}/show`" nuxt v-if="$auth.loggedIn">
         プロフィール
       </v-btn>
       <v-btn text v-if="$auth.loggedIn" @click="logout">

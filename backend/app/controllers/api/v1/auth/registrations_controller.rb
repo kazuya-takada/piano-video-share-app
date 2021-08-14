@@ -9,15 +9,13 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
     end
   end
 
-  # def destroy
-  #   user = User.find_by(params[:id])
-  #   user.destroy!
-  #   render json: user
-  # end
-
   private
 
   def sign_up_params
     params.require(:registration).permit(:name, :email, :password, :password_confirmation)
+  end
+
+  def account_update_params
+    params.require(:registration).permit(:name, :email)
   end
 end
