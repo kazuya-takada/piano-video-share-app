@@ -6,7 +6,7 @@
     text
     dismissible
   >
-    ログインしました！
+    {{ flashMessage.message }}しました！
   </v-alert>
 </template>
 

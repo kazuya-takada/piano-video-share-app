@@ -3,9 +3,15 @@ import { FlashMessage, UseFlashMessage } from '@/store/flash/flashTypes'
 
 const flashMessage = reactive<FlashMessage>({
   display: false,
+  message: '',
 })
 
-const displayFlashMessage = () => {
+// const setFlashMessage = (message: string) => {
+//   flashMessage.message = message
+// }
+
+const displayFlashMessage = (message: string) => {
+  flashMessage.message = message
   flashMessage.display = true
   setTimeout(() => {
     flashMessage.display = false
