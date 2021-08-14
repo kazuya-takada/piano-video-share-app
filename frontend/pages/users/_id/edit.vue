@@ -18,6 +18,14 @@
             <v-btn color="#6abe83" class="white--text" @click="editUser">
               編集
             </v-btn>
+            <v-btn
+              color="#f1ac9d"
+              class="white--text"
+              :to="`/users/${user.id}/show`"
+              nuxt
+            >
+              戻る
+            </v-btn>
           </v-card-actions>
         </v-form>
       </v-card-text>
