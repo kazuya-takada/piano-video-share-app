@@ -43,6 +43,7 @@ import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
+  auth: 'guest',
   setup() {
     const { $http, $auth } = useContext()
 

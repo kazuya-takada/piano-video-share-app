@@ -67,6 +67,10 @@ export default {
     baseURL: 'http://localhost:3000',
   },
 
+  router: {
+    middleware: ['auth'],
+  },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
