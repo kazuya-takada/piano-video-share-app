@@ -13,8 +13,10 @@
 import { defineComponent, useFetch, inject } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
+import FormComment from '~/components/post/FormComment.vue'
 
 export default defineComponent({
+  components: { FormComment },
   auth: false,
   setup() {
     const { user, fetchUser } = inject(userKey) as UseUser
