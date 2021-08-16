@@ -13,6 +13,9 @@
       <v-btn text to="/login" nuxt v-if="!$auth.loggedIn">
         ログイン
       </v-btn>
+      <v-btn text to="/posts/new" nuxt v-if="$auth.loggedIn">
+        新規投稿
+      </v-btn>
       <v-btn text :to="`/users/${user.id}/show`" nuxt v-if="$auth.loggedIn">
         プロフィール
       </v-btn>
