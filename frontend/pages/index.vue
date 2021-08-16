@@ -1,12 +1,14 @@
 <template>
-  <v-row align="center">
-    <PostIndivisual />
-    <PostIndivisual />
-    <PostIndivisual />
-    <PostIndivisual />
-    ログインユーザー
-    {{ user }}
-  </v-row>
+  <div>
+    <v-row align="center">
+      <PostIndivisual />
+      <PostIndivisual />
+      <PostIndivisual />
+      <PostIndivisual />
+      ログインユーザー
+      {{ user }}
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">
