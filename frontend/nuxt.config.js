@@ -65,6 +65,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: 'http://localhost:3000',
+    withCredentials: true,
   },
 
   router: {
