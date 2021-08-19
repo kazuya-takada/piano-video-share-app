@@ -104,7 +104,8 @@ export default defineComponent({
         // })
         .catch((e) => {
           console.log(e)
-          const errors = e.response.data.errors
+          console.log(e.response)
+          const errors = e.response.data
           errorMessages.backendErrors = errors
         })
     }
