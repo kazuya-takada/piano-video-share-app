@@ -6,15 +6,7 @@
           ユーザー登録
         </h1>
       </v-card-title>
-      <v-alert
-        dense
-        text
-        type="error"
-        v-for="(error, index) in errorMessages.backendErrors"
-        :key="index"
-      >
-        {{ error }}
-      </v-alert>
+      <ErrorMessage />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormName v-model="user.name" />
@@ -42,6 +34,8 @@ import {
 } from '@nuxtjs/composition-api'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
+import errorKey from '@/store/error/errorKey'
+import { UseErrorMessage } from '@/store/error/errorTypes'
 
 export default defineComponent({
   auth: 'guest',
@@ -50,6 +44,7 @@ export default defineComponent({
     const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
+    const { setErrorMessages } = inject(errorKey) as UseErrorMessage
 
     interface User {
       name: string
@@ -63,16 +58,6 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
-    })
-
-    const mockBadckendErrors: string[] = []
-
-    interface ErrorMessages {
-      backendErrors: string[]
-    }
-
-    const errorMessages = reactive<ErrorMessages>({
-      backendErrors: mockBadckendErrors,
     })
 
     const registerUser = async () => {
@@ -103,16 +88,13 @@ export default defineComponent({
         //     .catch((e) => console.log(e))
         // })
         .catch((e) => {
-          console.log(e)
-          console.log(e.response)
           const errors = e.response.data
-          errorMessages.backendErrors = errors
+          setErrorMessages(errors)
         })
     }
 
     return {
       user,
-      errorMessages,
       registerUser,
     }
   },
