@@ -6,7 +6,7 @@
           ユーザー登録
         </h1>
       </v-card-title>
-      <ErrorMessage />
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormName v-model="user.name" />
@@ -34,8 +34,6 @@ import {
 } from '@nuxtjs/composition-api'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
-import errorKey from '@/store/error/errorKey'
-import { UseErrorMessage } from '@/store/error/errorTypes'
 
 export default defineComponent({
   auth: 'guest',
@@ -44,9 +42,6 @@ export default defineComponent({
     const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
-    const { setErrorMessages, unsetErrorMessages } = inject(
-      errorKey,
-    ) as UseErrorMessage
 
     interface User {
       name: string
@@ -62,12 +57,19 @@ export default defineComponent({
       password_confirmation: '',
     })
 
+    interface Erros {
+      message: string[]
+    }
+
+    const errors = reactive<Erros>({
+      message: [],
+    })
+
     const registerUser = async () => {
       await $axios
         .post('/api/v1/users', user)
         .then(() => {
           router.push('/')
-          unsetErrorMessages()
           displayFlashMessage('新規登録')
         })
         // .then(async () => {
@@ -91,14 +93,14 @@ export default defineComponent({
         //     .catch((e) => console.log(e))
         // })
         .catch((e) => {
-          const errors = e.response.data.errors
-          setErrorMessages(errors)
+          errors.message = e.response.data
         })
     }
 
     return {
       user,
       registerUser,
+      errors,
     }
   },
 })

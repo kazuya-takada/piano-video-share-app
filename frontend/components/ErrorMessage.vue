@@ -4,7 +4,7 @@
       dense
       text
       type="error"
-      v-for="(error, index) in errorMessages.backendErrors"
+      v-for="(error, index) in errors"
       :key="index"
     >
       {{ error }}
@@ -13,17 +13,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from '@nuxtjs/composition-api'
-import errorKey from '@/store/error/errorKey'
-import { UseErrorMessage } from '@/store/error/errorTypes'
+import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup() {
-    const { errorMessages } = inject(errorKey) as UseErrorMessage
-
-    return {
-      errorMessages,
-    }
+  props: {
+    errors: {
+      type: Array,
+      require: true,
+    },
   },
 })
 </script>

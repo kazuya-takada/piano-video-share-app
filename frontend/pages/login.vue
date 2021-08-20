@@ -6,7 +6,7 @@
           ログイン
         </h1>
       </v-card-title>
-      <ErrorMessage />
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormEmail v-model="user.email" />
@@ -33,8 +33,6 @@ import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
-import errorKey from '@/store/error/errorKey'
-import { UseErrorMessage } from '@/store/error/errorTypes'
 
 export default defineComponent({
   auth: 'guest',
@@ -43,9 +41,6 @@ export default defineComponent({
 
     const { setUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
-    const { setErrorMessages, unsetErrorMessages } = inject(
-      errorKey,
-    ) as UseErrorMessage
 
     interface User {
       email: string
@@ -55,6 +50,14 @@ export default defineComponent({
     const user = reactive<User>({
       email: '',
       password: '',
+    })
+
+    interface Erros {
+      message: string[]
+    }
+
+    const errors = reactive<Erros>({
+      message: [],
     })
 
     const login = async () => {
@@ -72,14 +75,14 @@ export default defineComponent({
           displayFlashMessage('ログイン')
         })
         .catch((e) => {
-          const errors = e.response.data.errors
-          setErrorMessages(errors)
+          errors.message = e.response.data.errors
         })
     }
 
     return {
       user,
       login,
+      errors,
     }
   },
 })
