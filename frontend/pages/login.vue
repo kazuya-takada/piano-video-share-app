@@ -6,15 +6,7 @@
           ログイン
         </h1>
       </v-card-title>
-      <v-alert
-        dense
-        text
-        type="error"
-        v-for="(error, index) in errorMessages.backendErrors"
-        :key="index"
-      >
-        {{ error }}
-      </v-alert>
+      <ErrorMessage />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormEmail v-model="user.email" />
@@ -37,15 +29,23 @@ import {
   inject,
   reactive,
 } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
+import errorKey from '@/store/error/errorKey'
+import { UseErrorMessage } from '@/store/error/errorTypes'
 
 export default defineComponent({
   auth: 'guest',
   setup() {
     const { $auth } = useContext()
 
+    const { setUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
+    const { setErrorMessages, unsetErrorMessages } = inject(
+      errorKey,
+    ) as UseErrorMessage
 
     interface User {
       email: string
@@ -57,16 +57,6 @@ export default defineComponent({
       password: '',
     })
 
-    const mockBadckendErrors: string[] = []
-
-    interface ErrorMessages {
-      backendErrors: string[]
-    }
-
-    const errorMessages = reactive<ErrorMessages>({
-      backendErrors: mockBadckendErrors,
-    })
-
     const login = async () => {
       await $auth
         .loginWith('local', {
@@ -74,19 +64,21 @@ export default defineComponent({
             email: user.email,
             password: user.password,
           },
+          withCredentials: true,
         })
         .then((response: any) => {
-          console.log(response)
+          const user = response.data
+          setUser(user.id, user.name, user.email)
+          displayFlashMessage('ログイン')
         })
         .catch((e) => {
           const errors = e.response.data.errors
-          errorMessages.backendErrors = errors
+          setErrorMessages(errors)
         })
     }
 
     return {
       user,
-      errorMessages,
       login,
     }
   },

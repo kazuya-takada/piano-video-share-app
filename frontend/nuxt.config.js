@@ -114,9 +114,9 @@ export default {
           logout: false,
           user: false,
           // user: {
-          //   url: '/api/v1/user/',
+          //   url: '/api/v1/user',
           //   method: 'get',
-          //   propertyName: 'user',
+          //   propertyName: false,
           // },
         },
       },
