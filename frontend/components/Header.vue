@@ -42,23 +42,14 @@ export default defineComponent({
 
     const logout = async () => {
       await $axios
-        .delete('/api/v1/auth/sign_out', {
-          headers: {
-            'access-token': localStorage.getItem('access-token'),
-            client: localStorage.getItem('client'),
-            uid: localStorage.getItem('uid'),
-            'token-type': localStorage.getItem('token-type'),
-          },
+        .delete('/api/v1/logout', {
+          withCredentials: true,
         })
         .catch((e) => console.log(e))
       await unsetUser()
       await $auth
         .logout()
         .then(() => {
-          localStorage.removeItem('access-token')
-          localStorage.removeItem('client')
-          localStorage.removeItem('uid')
-          localStorage.removeItem('token-type')
           displayFlashMessage('ログアウト')
         })
         .catch((e) => {

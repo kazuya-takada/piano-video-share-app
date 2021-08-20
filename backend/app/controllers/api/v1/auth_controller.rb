@@ -14,4 +14,8 @@ class Api::V1::AuthController < ApplicationController
     current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
     render json: current_user
   end
+
+  def logout
+    reset_session
+  end
 end

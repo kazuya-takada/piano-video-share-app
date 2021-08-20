@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 			resources :users, only: [:create]
       post "/login", to: "auth#login"
       get "/user", to: "auth#get_current_user"
+      delete "logout", to: "auth#logout"
     end
   end
 end
