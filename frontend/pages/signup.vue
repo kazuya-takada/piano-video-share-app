@@ -30,8 +30,10 @@ import {
   useContext,
   inject,
   reactive,
-  useRouter,
 } from '@nuxtjs/composition-api'
+
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
@@ -39,9 +41,9 @@ export default defineComponent({
   auth: 'guest',
   setup() {
     const { $axios, $auth } = useContext()
-    const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
+    const { setUser } = inject(userKey) as UseUser
 
     interface User {
       name: string
@@ -68,30 +70,24 @@ export default defineComponent({
     const registerUser = async () => {
       await $axios
         .post('/api/v1/users', user)
-        .then(() => {
-          router.push('/')
+        .then(async () => {
+          await $auth
+            .loginWith('local', {
+              data: {
+                email: user.email,
+                password: user.password,
+              },
+              withCredentials: true,
+            })
+            .then((response: any) => {
+              const user = response.data
+              setUser(user.id, user.name, user.email)
+            })
+            .catch((e) => {
+              console.log(e)
+            })
           displayFlashMessage('新規登録')
         })
-        // .then(async () => {
-        //   await $auth
-        //     .loginWith('local', {
-        //       data: {
-        //         email: user.email,
-        //         password: user.password,
-        //       },
-        //     })
-        //     .then(() => {
-        //       // localStorage.setItem(
-        //       //   'access-token',
-        //       //   response.headers['access-token'],
-        //       // )
-        //       // localStorage.setItem('client', response.headers.client)
-        //       // localStorage.setItem('uid', response.headers.uid)
-        //       // localStorage.setItem('token-type', response.headers['token-type'])
-        //       displayFlashMessage('新規登録')
-        //     })
-        //     .catch((e) => console.log(e))
-        // })
         .catch((e) => {
           errors.message = e.response.data
         })
