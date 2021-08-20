@@ -102,9 +102,9 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: '/api/v1/auth/sign_in',
+            url: '/api/v1/login',
             method: 'post',
-            propertyName: 'access_token',
+            propertyName: false,
           },
           // methodがdeleteにならず、postになる
           // logout: {
@@ -113,8 +113,8 @@ export default {
           // },
           logout: false,
           user: false,
-          // {
-          //   url: '/api/v1/auth/',
+          // user: {
+          //   url: '/api/v1/user/',
           //   method: 'get',
           //   propertyName: 'user',
           // },

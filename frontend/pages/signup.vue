@@ -44,7 +44,9 @@ export default defineComponent({
     const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
-    const { setErrorMessages } = inject(errorKey) as UseErrorMessage
+    const { setErrorMessages, unsetErrorMessages } = inject(
+      errorKey,
+    ) as UseErrorMessage
 
     interface User {
       name: string
@@ -65,6 +67,7 @@ export default defineComponent({
         .post('/api/v1/users', user)
         .then(() => {
           router.push('/')
+          unsetErrorMessages()
           displayFlashMessage('新規登録')
         })
         // .then(async () => {
@@ -88,7 +91,7 @@ export default defineComponent({
         //     .catch((e) => console.log(e))
         // })
         .catch((e) => {
-          const errors = e.response.data
+          const errors = e.response.data.errors
           setErrorMessages(errors)
         })
     }

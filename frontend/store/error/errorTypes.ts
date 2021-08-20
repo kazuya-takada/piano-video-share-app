@@ -7,4 +7,5 @@ export interface ErrorMessages {
 export interface UseErrorMessage {
   errorMessages: DeepReadonly<ErrorMessages>
   setErrorMessages: (errors: string[]) => void
+  unsetErrorMessages: () => void
 }
