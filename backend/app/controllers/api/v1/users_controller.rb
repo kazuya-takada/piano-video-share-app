@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   wrap_parameters include: [:name, :email, :password, :password_confirmation]
   skip_before_action :login_required, only: :create
-  before_action :set_user, only: :destroy
+  before_action :set_user, only: [:update, :destroy]
 
   def create
     user = User.new(user_params)
@@ -9,6 +9,14 @@ class Api::V1::UsersController < ApplicationController
       render json: user
     else
       render json: user.errors.full_messages, status: 422
+    end
+  end
+
+  def update
+    if @user.update(user_params)
+      render json: @user
+    else
+      render json: @user.errors.full_messages, status: 422
     end
   end
 
@@ -26,5 +34,4 @@ class Api::V1::UsersController < ApplicationController
   def set_user
     @user = User.find(params[:id])
   end
-
 end

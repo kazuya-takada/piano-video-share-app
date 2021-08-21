@@ -6,9 +6,7 @@
           プロフィール編集
         </h1>
       </v-card-title>
-      <v-alert dense text type="error" v-if="errorMessage.backendError.length">
-        {{ errorMessage.backendError }}
-      </v-alert>
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormName v-model="currentUser.name" />
@@ -52,7 +50,7 @@ export default defineComponent({
     const { $axios } = useContext()
     const router = useRouter()
 
-    const { user, fetchUser } = inject(userKey) as UseUser
+    const { user, fetchUser, setUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     useFetch(async () => {
@@ -69,40 +67,35 @@ export default defineComponent({
       email: user.email,
     })
 
-    interface ErrorMessage {
-      backendError: string
+    interface Erros {
+      message: string[]
     }
 
-    const errorMessage = reactive<ErrorMessage>({
-      backendError: '',
+    const errors = reactive<Erros>({
+      message: [],
     })
 
     const editUser = async () => {
       await $axios
-        .$put('/api/v1/auth', currentUser, {
-          headers: {
-            'access-token': localStorage.getItem('access-token'),
-            client: localStorage.getItem('client'),
-            uid: localStorage.getItem('uid'),
-            'token-type': localStorage.getItem('token-type'),
-          },
+        .$put(`/api/v1/users/${user.id}`, currentUser, {
+          withCredentials: true,
         })
-        .then(() => {
+        .then((response) => {
+          const user = response
+          setUser(user.id, user.name, user.email)
           router.push(`/users/${user.id}/show`)
           displayFlashMessage('編集')
         })
         .catch((e) => {
-          // devise_token_authのユーザーアップデートのエラーメッセージがどうしても上手くいかないため、下記の通り記述。
-          errorMessage.backendError =
-            '入力に誤りがあるか、もしくはすでに使われているメールアドレスです。'
+          errors.message = e.response.data
         })
     }
 
     return {
       currentUser,
       user,
-      errorMessage,
       editUser,
+      errors,
     }
   },
 })
