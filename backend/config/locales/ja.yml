@@ -9,6 +9,7 @@ ja:
           has_many: '%{record}が存在しているので削除できません'
     models:
       user: ユーザー
+      movie: 動画
     attributes:
       user:
         id: ID
@@ -16,6 +17,12 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: 確認用パスワード
+        created_at: 投稿日時
+        updated_at: 更新日時
+      movie:
+        id: ID
+        title: タイトル
+        introduction: 投稿コメント
         created_at: 投稿日時
         updated_at: 更新日時
   date:

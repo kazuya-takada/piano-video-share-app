@@ -6,24 +6,13 @@
           動画投稿
         </h1>
       </v-card-title>
-      <v-alert
-        dense
-        text
-        type="error"
-        v-for="(error, index) in errorMessages.backendErrors"
-        :key="index"
-      >
-        {{ error }}
-      </v-alert>
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <PostFormTitle />
-          <PostFormVideo />
-          <PostFormComment />
-          <!-- <UserFormName v-model="user.name" />
-          <UserFormEmail v-model="user.email" />
-          <UserFormPassword v-model="user.password" />
-          <UserFormPasswordConfirmation v-model="user.password_confirmation" /> -->
+          <PostFormTitle v-model="movie.title" />
+          <PostFormVideo @set-image="setImage" />
+          <PostFormComment v-model="movie.introduction" />
+          {{ movie }}
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規投稿
@@ -39,6 +28,7 @@
 import {
   defineComponent,
   useContext,
+  useRouter,
   inject,
   reactive,
 } from '@nuxtjs/composition-api'
@@ -47,67 +37,58 @@ import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   setup() {
-    const { $axios, $auth } = useContext()
+    const { $axios } = useContext()
+    const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
-    interface User {
-      name: string
-      email: string
-      password: string
-      password_confirmation: string
+    interface Movie {
+      title: string
+      movie: any
+      introduction: string
     }
 
-    const user = reactive<User>({
-      name: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
+    const movie = reactive<Movie>({
+      title: '',
+      movie: null,
+      introduction: '',
     })
 
-    const mockBadckendErrors: string[] = []
-
-    interface ErrorMessages {
-      backendErrors: string[]
+    interface Erros {
+      message: string[]
     }
 
-    const errorMessages = reactive<ErrorMessages>({
-      backendErrors: mockBadckendErrors,
+    const errors = reactive<Erros>({
+      message: [],
     })
+
+    const setImage = (e: any) => {
+      movie.movie = e
+    }
 
     const registerUser = async () => {
+      console.log(movie.movie)
+      const formData = new FormData()
+      formData.append('movie[title]', movie.title)
+      formData.append('movie[movie]', movie.movie)
+      formData.append('movie[introduction]', movie.introduction)
       await $axios
-        .post('/api/v1/auth', user)
-        .then(async () => {
-          await $auth
-            .loginWith('local', {
-              data: {
-                email: user.email,
-                password: user.password,
-              },
-            })
-            .then((response: any) => {
-              localStorage.setItem(
-                'access-token',
-                response.headers['access-token'],
-              )
-              localStorage.setItem('client', response.headers.client)
-              localStorage.setItem('uid', response.headers.uid)
-              localStorage.setItem('token-type', response.headers['token-type'])
-              displayFlashMessage('新規登録')
-            })
-            .catch((e) => console.log(e))
+        .$post('/api/v1/movies', formData)
+        .then((response: any) => {
+          router.push('/')
+          displayFlashMessage('動画投稿')
+          // storeに動画をセットする必要がありそう。
         })
         .catch((e) => {
-          const errors = e.response.data.errors
-          errorMessages.backendErrors = errors
+          errors.message = e.response.data
         })
     }
 
     return {
-      user,
-      errorMessages,
+      movie,
+      setImage,
       registerUser,
+      errors,
     }
   },
 })
