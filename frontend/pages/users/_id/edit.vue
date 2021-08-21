@@ -80,7 +80,7 @@ export default defineComponent({
         .$put(`/api/v1/users/${user.id}`, currentUser, {
           withCredentials: true,
         })
-        .then((response) => {
+        .then((response: any) => {
           const user = response
           setUser(user.id, user.name, user.email)
           router.push(`/users/${user.id}/show`)

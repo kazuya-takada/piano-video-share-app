@@ -69,7 +69,7 @@ export default defineComponent({
 
     const registerUser = async () => {
       await $axios
-        .post('/api/v1/users', user)
+        .$post('/api/v1/users', user)
         .then(async () => {
           await $auth
             .loginWith('local', {
