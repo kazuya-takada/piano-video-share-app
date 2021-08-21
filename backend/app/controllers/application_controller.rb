@@ -1,17 +1,14 @@
 class ApplicationController < ActionController::API
   include ActionController::Cookies
+  before_action :login_required
 
-  # def encode_token(payload)
-  #   JWT.encode(payload,'my_secret_key','HS256')
-  # end
+  private
 
-  # def session_user
-  #   decoded_hash = decoded_token
-  #   if !decoded_hash.empty?
-  #     user_id = decoded_hash[0]['id']
-  #     @user = User.find_by(id: user_id)
-  #   else 
-  #     nil
-  #   end
-  # end
+  def login_required
+    render json: { errors: ['ログインが必要です'] }, status: 401 unless session[:user_id]
+  end
+
+  def current_user
+    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+  end
 end

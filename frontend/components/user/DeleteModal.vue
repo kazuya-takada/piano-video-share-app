@@ -36,33 +36,29 @@ export default defineComponent({
   setup() {
     const { $axios, $auth } = useContext()
 
-    const { unsetUser } = inject(userKey) as UseUser
+    const { user, unsetUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     const deleteUser = async () => {
       await $axios
-        .$delete('/api/v1/auth', {
-          headers: {
-            'access-token': localStorage.getItem('access-token'),
-            client: localStorage.getItem('client'),
-            uid: localStorage.getItem('uid'),
-            'token-type': localStorage.getItem('token-type'),
-          },
+        .$delete(`/api/v1/users/${user.id}`, {
+          withCredentials: true,
         })
         .catch((e) => console.log(e))
-      await unsetUser()
+      await $axios
+        .delete('/api/v1/logout', {
+          withCredentials: true,
+        })
+        .catch((e) => console.log(e))
       await $auth
         .logout()
         .then(() => {
-          localStorage.removeItem('access-token')
-          localStorage.removeItem('client')
-          localStorage.removeItem('uid')
-          localStorage.removeItem('token-type')
-          displayFlashMessage('削除')
+          displayFlashMessage('ログアウト')
         })
         .catch((e) => {
           console.log(e)
         })
+      await unsetUser()
     }
 
     return {

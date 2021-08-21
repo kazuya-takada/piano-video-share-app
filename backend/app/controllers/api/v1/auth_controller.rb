@@ -1,4 +1,6 @@
 class Api::V1::AuthController < ApplicationController
+  skip_before_action :login_required, only: :login
+  before_action :current_user, only: :get_current_user
 
   def login
     user = User.find_by(email: params[:email])
@@ -11,8 +13,7 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def get_current_user
-    current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
-    render json: current_user
+    render json: @current_user
   end
 
   def logout
