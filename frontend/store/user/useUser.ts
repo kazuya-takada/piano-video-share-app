@@ -16,15 +16,11 @@ const setUser = (id: number, name: string, email: string) => {
 
 const fetchUser = async () => {
   try {
-    const currentUser: any = await axios.get('/api/v1/users', {
-      headers: {
-        'access-token': localStorage.getItem('access-token'),
-        client: localStorage.getItem('client'),
-        uid: localStorage.getItem('uid'),
-        'token-type': localStorage.getItem('token-type'),
-      },
-    })
-    setUser(currentUser.data.id, currentUser.data.name, currentUser.data.email)
+    await axios
+      .get('/api/v1/user', { withCredentials: true })
+      .then((response: any) => {
+        setUser(response.data.id, response.data.name, response.data.email)
+      })
   } catch (e) {
     console.log(e)
   }
@@ -39,6 +35,7 @@ const unsetUser = () => {
 const useUser: UseUser = {
   user: readonly(user),
   fetchUser,
+  setUser,
   unsetUser,
 }
 

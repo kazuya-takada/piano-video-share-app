@@ -47,7 +47,7 @@ import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   setup() {
-    const { $http, $auth } = useContext()
+    const { $axios, $auth } = useContext()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
@@ -76,7 +76,7 @@ export default defineComponent({
     })
 
     const registerUser = async () => {
-      await $http
+      await $axios
         .post('/api/v1/auth', user)
         .then(async () => {
           await $auth

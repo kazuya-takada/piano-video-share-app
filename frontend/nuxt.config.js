@@ -47,24 +47,17 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
     '@nuxtjs/auth',
-    '@nuxt/http',
   ],
 
-  // http: {
-  //   proxy: true,
-  // },
-
-  http: {
-    baseURL: 'http://localhost:3000',
+  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  axios: {
+    // baseURL: 'http://localhost:3000',
+    proxy: true,
+    withCredentials: true,
   },
 
   proxy: {
     '/api/': 'http://localhost:3000',
-  },
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    baseURL: 'http://localhost:3000',
   },
 
   router: {
@@ -101,22 +94,12 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: '/api/v1/auth/sign_in',
+            url: '/api/v1/login',
             method: 'post',
-            propertyName: 'access_token',
+            propertyName: false,
           },
-          // methodがdeleteにならず、postになる
-          // logout: {
-          //   url: '/api/v1/auth/sign_out',
-          //   method: 'delete',
-          // },
           logout: false,
           user: false,
-          // {
-          //   url: '/api/v1/auth/',
-          //   method: 'get',
-          //   propertyName: 'user',
-          // },
         },
       },
     },

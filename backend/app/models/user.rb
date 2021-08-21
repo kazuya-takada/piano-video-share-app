@@ -1,13 +1,10 @@
-# frozen_string_literal: true
+class User < ApplicationRecord
+  has_secure_password
+  before_save { self.email = email.downcase }
 
-class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-        :recoverable, :rememberable, :validatable
-  include DeviseTokenAuth::Concerns::User
-  # VALID_PASSWORD_REGEX = /\A[a-z0-9]+\z/i
+  VALID_PASSWORD_REGEX = /\A[a-z0-9]+\z/i
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :name, presence: true, length: { maximum: 30 }
-  validates :email, length: { maximum: 72 }
-  # validates :password, format: { with: VALID_PASSWORD_REGEX }
+  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }, length: { maximum: 72 }
+  validates :password, format: { with: VALID_PASSWORD_REGEX }, length: {minimum: 8, maximum: 30 }, on: :create
 end

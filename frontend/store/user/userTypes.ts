@@ -8,6 +8,7 @@ export interface User {
 
 export interface UseUser {
   user: DeepReadonly<User>
+  setUser: (id: number, name: string, email: string) => void
   fetchUser: () => void
   unsetUser: () => void
 }

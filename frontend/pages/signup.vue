@@ -6,15 +6,7 @@
           ユーザー登録
         </h1>
       </v-card-title>
-      <v-alert
-        dense
-        text
-        type="error"
-        v-for="(error, index) in errorMessages.backendErrors"
-        :key="index"
-      >
-        {{ error }}
-      </v-alert>
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormName v-model="user.name" />
@@ -39,15 +31,19 @@ import {
   inject,
   reactive,
 } from '@nuxtjs/composition-api'
+
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
 export default defineComponent({
   auth: 'guest',
   setup() {
-    const { $http, $auth } = useContext()
+    const { $axios, $auth } = useContext()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
+    const { setUser } = inject(userKey) as UseUser
 
     interface User {
       name: string
@@ -63,19 +59,17 @@ export default defineComponent({
       password_confirmation: '',
     })
 
-    const mockBadckendErrors: string[] = []
-
-    interface ErrorMessages {
-      backendErrors: string[]
+    interface Erros {
+      message: string[]
     }
 
-    const errorMessages = reactive<ErrorMessages>({
-      backendErrors: mockBadckendErrors,
+    const errors = reactive<Erros>({
+      message: [],
     })
 
     const registerUser = async () => {
-      await $http
-        .post('/api/v1/auth', user)
+      await $axios
+        .$post('/api/v1/users', user)
         .then(async () => {
           await $auth
             .loginWith('local', {
@@ -83,29 +77,26 @@ export default defineComponent({
                 email: user.email,
                 password: user.password,
               },
+              withCredentials: true,
             })
             .then((response: any) => {
-              localStorage.setItem(
-                'access-token',
-                response.headers['access-token'],
-              )
-              localStorage.setItem('client', response.headers.client)
-              localStorage.setItem('uid', response.headers.uid)
-              localStorage.setItem('token-type', response.headers['token-type'])
-              displayFlashMessage('新規登録')
+              const user = response.data
+              setUser(user.id, user.name, user.email)
             })
-            .catch((e) => console.log(e))
+            .catch((e) => {
+              console.log(e)
+            })
+          displayFlashMessage('新規登録')
         })
         .catch((e) => {
-          const errors = e.response.data.errors
-          errorMessages.backendErrors = errors
+          errors.message = e.response.data
         })
     }
 
     return {
       user,
-      errorMessages,
       registerUser,
+      errors,
     }
   },
 })

@@ -6,15 +6,7 @@
           ログイン
         </h1>
       </v-card-title>
-      <v-alert
-        dense
-        text
-        type="error"
-        v-for="(error, index) in errorMessages.backendErrors"
-        :key="index"
-      >
-        {{ error }}
-      </v-alert>
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
           <UserFormEmail v-model="user.email" />
@@ -37,6 +29,8 @@ import {
   inject,
   reactive,
 } from '@nuxtjs/composition-api'
+import userKey from '@/store/user/userKey'
+import { UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
@@ -45,6 +39,7 @@ export default defineComponent({
   setup() {
     const { $auth } = useContext()
 
+    const { setUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     interface User {
@@ -57,14 +52,12 @@ export default defineComponent({
       password: '',
     })
 
-    const mockBadckendErrors: string[] = []
-
-    interface ErrorMessages {
-      backendErrors: string[]
+    interface Erros {
+      message: string[]
     }
 
-    const errorMessages = reactive<ErrorMessages>({
-      backendErrors: mockBadckendErrors,
+    const errors = reactive<Erros>({
+      message: [],
     })
 
     const login = async () => {
@@ -74,24 +67,22 @@ export default defineComponent({
             email: user.email,
             password: user.password,
           },
+          withCredentials: true,
         })
         .then((response: any) => {
-          localStorage.setItem('access-token', response.headers['access-token'])
-          localStorage.setItem('client', response.headers.client)
-          localStorage.setItem('uid', response.headers.uid)
-          localStorage.setItem('token-type', response.headers['token-type'])
+          const user = response.data
+          setUser(user.id, user.name, user.email)
           displayFlashMessage('ログイン')
         })
         .catch((e) => {
-          const errors = e.response.data.errors
-          errorMessages.backendErrors = errors
+          errors.message = e.response.data.errors
         })
     }
 
     return {
       user,
-      errorMessages,
       login,
+      errors,
     }
   },
 })
