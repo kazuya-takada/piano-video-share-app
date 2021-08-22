@@ -1,36 +1,11 @@
 <template>
   <div>
     <v-row align="center">
-      <!-- <PostIndivisual />
-      <PostIndivisual />
-      <PostIndivisual />
-      <PostIndivisual /> -->
-      <v-col
-        cols="12"
-        sm="8"
-        md="4"
+      <MovieIndivisual
         v-for="(movie, index) in movies.movieList"
         :key="index"
-      >
-        <v-card class="mx-auto" max-width="500px">
-          <video :src="movie.movie_url" class="preview" controls></video>
-          <v-card-title class="mb-3">
-            {{ movie.title }}
-          </v-card-title>
-          <v-card-subtitle>
-            投稿者：Guest
-            <br />
-            投稿日：{{ new Date(movie.created_at).toLocaleString() }}
-          </v-card-subtitle>
-          <v-card-actions>
-            <v-btn color="#6abe83" text>
-              再生する
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      a
-      {{ movies }}
+        :index="index"
+      />
       ログインユーザー
       {{ user }}
       <br />
@@ -39,12 +14,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  useFetch,
-  inject,
-  useContext,
-} from '@nuxtjs/composition-api'
+import { defineComponent, useFetch, inject } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 import movieKey from '@/store/movie/movieKey'

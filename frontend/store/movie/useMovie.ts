@@ -10,10 +10,14 @@ const setMovies = (array: any) => {
   movies.movieList.push(array)
 }
 
+const unsetMovies = () => {
+  movies.movieList = []
+}
+
 const fetchMovies = async () => {
   try {
     await axios.get('/api/v1/movies').then((response: any) => {
-      console.log(response.data)
+      unsetMovies()
       response.data.forEach((array: []) => {
         setMovies(array)
       })

@@ -9,9 +9,9 @@
       <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <PostFormTitle v-model="movie.title" />
-          <PostFormVideo @set-image="setImage" />
-          <PostFormIntroduction v-model="movie.introduction" />
+          <MovieFormTitle v-model="movie.title" />
+          <MovieFormVideo @set-image="setImage" />
+          <MovieFormIntroduction v-model="movie.introduction" />
           {{ movie }}
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
@@ -70,7 +70,6 @@ export default defineComponent({
     }
 
     const registerUser = async () => {
-      console.log(movie.movie)
       const formData = new FormData()
       formData.append('movie[title]', movie.title)
       formData.append('movie[movie]', movie.movie)
@@ -81,7 +80,6 @@ export default defineComponent({
           setMovies(response)
           router.push('/')
           displayFlashMessage('動画投稿')
-          // storeに動画をセットする必要がありそう。
         })
         .catch((e) => {
           errors.message = e.response.data
