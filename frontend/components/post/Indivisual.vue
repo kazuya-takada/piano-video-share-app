@@ -1,10 +1,6 @@
 <template>
   <v-col cols="12" sm="8" md="4">
     <v-card class="mx-auto" max-width="500px">
-      <!-- <v-img
-        src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-        height="200px"
-      ></v-img> -->
       <video src="~/assets/videos/test.mp4" class="preview" controls></video>
       <v-card-title class="mb-3">
         ここに動画のタイトル

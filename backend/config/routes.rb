@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       get "/user", to: "auth#get_current_user"
       delete "logout", to: "auth#logout"
 			resources :users, only: [:create, :update, :destroy]
-      resources :movies, only: [:create]
+      resources :movies, only: [:index, :create]
     end
   end
 end
