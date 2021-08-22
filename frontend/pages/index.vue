@@ -9,18 +9,18 @@
         cols="12"
         sm="8"
         md="4"
-        v-for="(movie_url, index) in movie.urls"
+        v-for="(movie, index) in movies.movieList"
         :key="index"
       >
         <v-card class="mx-auto" max-width="500px">
-          <video :src="movie_url" class="preview" controls></video>
+          <video :src="movie.movie_url" class="preview" controls></video>
           <v-card-title class="mb-3">
-            ここに動画のタイトル
+            {{ movie.title }}
           </v-card-title>
           <v-card-subtitle>
             投稿者：Guest
             <br />
-            投稿日時：2021/08/15
+            投稿日：{{ new Date(movie.created_at).toLocaleString() }}
           </v-card-subtitle>
           <v-card-actions>
             <v-btn color="#6abe83" text>
@@ -29,11 +29,11 @@
           </v-card-actions>
         </v-card>
       </v-col>
+      a
+      {{ movies }}
       ログインユーザー
       {{ user }}
       <br />
-      投稿データのurl
-      {{ movie.urls }}
     </v-row>
   </div>
 </template>
@@ -44,38 +44,34 @@ import {
   useFetch,
   inject,
   useContext,
-  reactive,
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
-import FormComment from '~/components/post/FormComment.vue'
+import movieKey from '@/store/movie/movieKey'
+import { UseMovie } from '@/store/movie/movieTypes'
 
 export default defineComponent({
-  components: { FormComment },
   auth: false,
   setup() {
-    const { $axios } = useContext()
-
     const { user, fetchUser } = inject(userKey) as UseUser
-    const movie = reactive({
-      urls: [],
-    })
+    const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
     useFetch(async () => {
       await fetchUser()
-      await $axios
-        .$get('/api/v1/movies')
-        .then((response: any) => {
-          movie.urls = response.map((obj: any) => obj.movie_url)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
+      await fetchMovies()
+      // await $axios
+      //   .$get('/api/v1/movies')
+      //   .then((response: any) => {
+      //     movie.urls = response.map((obj: any) => obj.movie_url)
+      //   })
+      //   .catch((e) => {
+      //     console.log(e)
+      //   })
     })
 
     return {
       user,
-      movie,
+      movies,
     }
   },
 })

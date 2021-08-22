@@ -11,7 +11,7 @@
         <v-form ref="form" lazy-validation>
           <PostFormTitle v-model="movie.title" />
           <PostFormVideo @set-image="setImage" />
-          <PostFormComment v-model="movie.introduction" />
+          <PostFormIntroduction v-model="movie.introduction" />
           {{ movie }}
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
@@ -34,6 +34,8 @@ import {
 } from '@nuxtjs/composition-api'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
+import movieKey from '@/store/movie/movieKey'
+import { UseMovie } from '@/store/movie/movieTypes'
 
 export default defineComponent({
   setup() {
@@ -41,6 +43,7 @@ export default defineComponent({
     const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
+    const { setMovies } = inject(movieKey) as UseMovie
 
     interface Movie {
       title: string
@@ -75,6 +78,7 @@ export default defineComponent({
       await $axios
         .$post('/api/v1/movies', formData)
         .then((response: any) => {
+          setMovies(response)
           router.push('/')
           displayFlashMessage('動画投稿')
           // storeに動画をセットする必要がありそう。

@@ -17,12 +17,15 @@ import userKey from '@/store/user/userKey'
 import useUser from '@/store/user/useUser'
 import flashKey from '@/store/flash/flashKey'
 import useFlash from '@/store/flash/useFlash'
+import movieKey from '@/store/movie/movieKey'
+import useMovie from '@/store/movie/useMovie'
 
 export default defineComponent({
   name: 'default',
   setup() {
     provide(userKey, useUser)
     provide(flashKey, useFlash)
+    provide(movieKey, useMovie)
   },
 })
 </script>
