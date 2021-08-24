@@ -41,20 +41,18 @@ export default defineComponent({
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
     const logout = async () => {
-      await $axios
-        .delete('/api/v1/logout', {
-          withCredentials: true,
-        })
-        .catch((e) => console.log(e))
-      await unsetUser()
-      await $auth
-        .logout()
-        .then(() => {
-          displayFlashMessage('ログアウト')
-        })
-        .catch((e) => {
-          console.log(e)
-        })
+      try {
+        await $axios
+          .delete('/api/v1/logout', {
+            withCredentials: true,
+          })
+          .catch((e) => console.log(e))
+        await unsetUser()
+        await $auth.logout()
+        displayFlashMessage('ログアウト')
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     return {

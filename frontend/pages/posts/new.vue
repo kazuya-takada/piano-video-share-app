@@ -35,7 +35,7 @@ import {
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 import movieKey from '@/store/movie/movieKey'
-import { UseMovie } from '@/store/movie/movieTypes'
+import { Movie, UseMovie } from '@/store/movie/movieTypes'
 
 export default defineComponent({
   setup() {
@@ -45,15 +45,15 @@ export default defineComponent({
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
     const { setMovies } = inject(movieKey) as UseMovie
 
-    interface Movie {
+    interface MovieInput {
       title: string
       movie: any
       introduction: string
     }
 
-    const movie = reactive<Movie>({
+    const movie = reactive<MovieInput>({
       title: '',
-      movie: null,
+      movie: '',
       introduction: '',
     })
 
@@ -70,20 +70,32 @@ export default defineComponent({
     }
 
     const registerUser = async () => {
-      const formData = new FormData()
+      const formData: any = new FormData()
       formData.append('movie[title]', movie.title)
       formData.append('movie[movie]', movie.movie)
       formData.append('movie[introduction]', movie.introduction)
-      await $axios
-        .$post('/api/v1/movies', formData)
-        .then((response: any) => {
-          setMovies(response)
-          router.push('/')
-          displayFlashMessage('動画投稿')
-        })
-        .catch((e) => {
-          errors.message = e.response.data
-        })
+      try {
+        const response: Movie[] = await $axios.$post('/api/v1/movies', formData)
+        setMovies(response)
+        router.push('/')
+        displayFlashMessage('動画投稿')
+      } catch (e) {
+        switch (e.response.status) {
+          case 500:
+            errors.message = ['動画が添付されていません']
+            break
+          case 422:
+            errors.message = e.response.data.map((message: string) => {
+              return message.includes('Movie')
+                ? message.replace('Movie', '動画')
+                : message
+            })
+            break
+          default:
+            console.log(e)
+            break
+        }
+      }
     }
 
     return {
