@@ -6,24 +6,13 @@
           動画投稿
         </h1>
       </v-card-title>
-      <v-alert
-        dense
-        text
-        type="error"
-        v-for="(error, index) in errorMessages.backendErrors"
-        :key="index"
-      >
-        {{ error }}
-      </v-alert>
+      <ErrorMessage :errors="errors.message" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <PostFormTitle />
-          <PostFormVideo />
-          <PostFormComment />
-          <!-- <UserFormName v-model="user.name" />
-          <UserFormEmail v-model="user.email" />
-          <UserFormPassword v-model="user.password" />
-          <UserFormPasswordConfirmation v-model="user.password_confirmation" /> -->
+          <MovieFormTitle v-model="movie.title" />
+          <MovieFormVideo @set-image="setImage" />
+          <MovieFormIntroduction v-model="movie.introduction" />
+          {{ movie }}
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規投稿
@@ -39,75 +28,81 @@
 import {
   defineComponent,
   useContext,
+  useRouter,
   inject,
   reactive,
 } from '@nuxtjs/composition-api'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
+import movieKey from '@/store/movie/movieKey'
+import { Movie, UseMovie } from '@/store/movie/movieTypes'
 
 export default defineComponent({
   setup() {
-    const { $axios, $auth } = useContext()
+    const { $axios } = useContext()
+    const router = useRouter()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
+    const { setMovies } = inject(movieKey) as UseMovie
 
-    interface User {
-      name: string
-      email: string
-      password: string
-      password_confirmation: string
+    interface MovieInput {
+      title: string
+      movie: any
+      introduction: string
     }
 
-    const user = reactive<User>({
-      name: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
+    const movie = reactive<MovieInput>({
+      title: '',
+      movie: '',
+      introduction: '',
     })
 
-    const mockBadckendErrors: string[] = []
-
-    interface ErrorMessages {
-      backendErrors: string[]
+    interface Erros {
+      message: string[]
     }
 
-    const errorMessages = reactive<ErrorMessages>({
-      backendErrors: mockBadckendErrors,
+    const errors = reactive<Erros>({
+      message: [],
     })
+
+    const setImage = (e: any) => {
+      movie.movie = e
+    }
 
     const registerUser = async () => {
-      await $axios
-        .post('/api/v1/auth', user)
-        .then(async () => {
-          await $auth
-            .loginWith('local', {
-              data: {
-                email: user.email,
-                password: user.password,
-              },
+      const formData: any = new FormData()
+      formData.append('movie[title]', movie.title)
+      formData.append('movie[movie]', movie.movie)
+      formData.append('movie[introduction]', movie.introduction)
+      try {
+        const response: Movie[] = await $axios.$post('/api/v1/movies', formData)
+        setMovies(response)
+        router.push('/')
+        displayFlashMessage('動画投稿')
+      } catch (e) {
+        switch (e.response.status) {
+          case 500:
+            errors.message = ['動画が添付されていません']
+            break
+          case 422:
+            errors.message = e.response.data.map((message: string) => {
+              return message.includes('Movie')
+                ? message.replace('Movie', '動画')
+                : message
             })
-            .then((response: any) => {
-              localStorage.setItem(
-                'access-token',
-                response.headers['access-token'],
-              )
-              localStorage.setItem('client', response.headers.client)
-              localStorage.setItem('uid', response.headers.uid)
-              localStorage.setItem('token-type', response.headers['token-type'])
-              displayFlashMessage('新規登録')
-            })
-            .catch((e) => console.log(e))
-        })
-        .catch((e) => {
-          const errors = e.response.data.errors
-          errorMessages.backendErrors = errors
-        })
+            break
+          default:
+            console.log(e)
+            break
+        }
+      }
     }
 
     return {
-      user,
-      errorMessages,
+      movie,
+      setImage,
       registerUser,
+      errors,
     }
   },
 })

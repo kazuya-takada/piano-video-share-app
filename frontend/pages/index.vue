@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-row align="center">
-      <PostIndivisual />
-      <PostIndivisual />
-      <PostIndivisual />
-      <PostIndivisual />
+      <MovieIndivisual
+        v-for="(movie, index) in movies.movieList"
+        :key="index"
+        :index="index"
+      />
       ログインユーザー
       {{ user }}
+      <br />
     </v-row>
   </div>
 </template>
@@ -15,20 +17,31 @@
 import { defineComponent, useFetch, inject } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
-import FormComment from '~/components/post/FormComment.vue'
+import movieKey from '@/store/movie/movieKey'
+import { UseMovie } from '@/store/movie/movieTypes'
 
 export default defineComponent({
-  components: { FormComment },
   auth: false,
   setup() {
     const { user, fetchUser } = inject(userKey) as UseUser
+    const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
     useFetch(async () => {
       await fetchUser()
+      await fetchMovies()
+      // await $axios
+      //   .$get('/api/v1/movies')
+      //   .then((response: any) => {
+      //     movie.urls = response.map((obj: any) => obj.movie_url)
+      //   })
+      //   .catch((e) => {
+      //     console.log(e)
+      //   })
     })
 
     return {
       user,
+      movies,
     }
   },
 })

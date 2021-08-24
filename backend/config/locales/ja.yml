@@ -9,6 +9,7 @@ ja:
           has_many: '%{record}が存在しているので削除できません'
     models:
       user: ユーザー
+      movie: 動画
     attributes:
       user:
         id: ID
@@ -16,6 +17,12 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: 確認用パスワード
+        created_at: 投稿日時
+        updated_at: 更新日時
+      movie:
+        id: ID
+        title: タイトル
+        introduction: 投稿コメント
         created_at: 投稿日時
         updated_at: 更新日時
   date:
@@ -144,6 +151,7 @@ ja:
       too_long: は%{count}文字以内で入力してください
       too_short: は%{count}文字以上で入力してください
       wrong_length: は%{count}文字で入力してください
+      content_type_invalid: 'ファイル形式が違います'
     template:
       body: 次の項目を確認してください
       header:
