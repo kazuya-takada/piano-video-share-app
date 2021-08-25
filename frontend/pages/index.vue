@@ -2,7 +2,7 @@
   <div>
     <v-row align="center">
       <MovieIndivisual
-        v-for="(movie, index) in movies.movieList"
+        v-for="(movie, index) in movies"
         :key="index"
         :index="index"
       />

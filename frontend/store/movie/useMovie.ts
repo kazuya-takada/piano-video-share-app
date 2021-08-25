@@ -1,17 +1,15 @@
-import { reactive, readonly } from '@nuxtjs/composition-api'
-import { Movie, Movies, UseMovie } from '@/store/movie/movieTypes'
+import { ref, readonly } from '@nuxtjs/composition-api'
+import { Movie, UseMovie } from '@/store/movie/movieTypes'
 import axios from 'axios'
 
-const movies = reactive<Movies>({
-  movieList: [],
-})
+const movies = ref<Movie[]>([])
 
 const setMovies = (movie: Movie) => {
-  movies.movieList.push(movie)
+  movies.value.push(movie)
 }
 
 const unsetMovies = () => {
-  movies.movieList = []
+  movies.value = []
 }
 
 const fetchMovies = async () => {

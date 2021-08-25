@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog.isDisplay" width="500">
+  <v-dialog v-model="dialog" width="500">
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">
         本当に削除しますか？
@@ -10,7 +10,7 @@
         <v-btn color="#f06966" text @click="deleteUser">
           削除する
         </v-btn>
-        <v-btn color="#6abe83" text @click="dialog.isDisplay = false">
+        <v-btn color="#6abe83" text @click="callToDialogFalse">
           戻る
         </v-btn>
       </v-card-actions>
@@ -28,12 +28,12 @@ import { UseFlashMessage } from '@/store/flash/flashTypes'
 export default defineComponent({
   props: {
     dialog: {
-      type: Object,
+      type: Boolean,
       required: true,
     },
   },
 
-  setup() {
+  setup(props, context) {
     const { $axios, $auth } = useContext()
 
     const { user, unsetUser } = inject(userKey) as UseUser
@@ -52,8 +52,13 @@ export default defineComponent({
       }
     }
 
+    const callToDialogFalse = () => {
+      context.emit('to-dialog-false')
+    }
+
     return {
       deleteUser,
+      callToDialogFalse,
     }
   },
 })

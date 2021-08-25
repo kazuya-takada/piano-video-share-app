@@ -9,12 +9,8 @@ export interface Movie {
   movie_url: string
 }
 
-export interface Movies {
-  movieList: Movie[]
-}
-
 export interface UseMovie {
-  movies: DeepReadonly<Movies>
-  setMovies: (array: any) => void
+  movies: DeepReadonly<any>
+  setMovies: (movie: Movie) => void
   fetchMovies: () => void
 }

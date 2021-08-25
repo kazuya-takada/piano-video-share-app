@@ -6,12 +6,11 @@
           プロフィール編集
         </h1>
       </v-card-title>
-      <ErrorMessage :errors="errors.message" />
+      <ErrorMessage :errors="errorMessages" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <UserFormName v-model="currentUser.name" />
-          <UserFormEmail v-model="currentUser.email" />
-          {{ user }}
+          <UserFormName v-model="inputUser.name" />
+          <UserFormEmail v-model="inputUser.email" />
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="editUser">
               編集
@@ -39,6 +38,7 @@ import {
   inject,
   useFetch,
   reactive,
+  ref,
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { User, UseUser } from '@/store/user/userTypes'
@@ -53,33 +53,29 @@ export default defineComponent({
     const { user, fetchUser, setUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
-    useFetch(async () => {
-      await fetchUser()
-    })
-
-    interface CurrentUser {
+    interface InputUser {
       name: string
       email: string
     }
 
-    const currentUser = reactive<CurrentUser>({
+    const inputUser = reactive<InputUser>({
       name: user.name,
       email: user.email,
     })
 
-    interface Erros {
-      message: string[]
-    }
-
-    const errors = reactive<Erros>({
-      message: [],
+    useFetch(async () => {
+      await fetchUser()
+      inputUser.name = user.name
+      inputUser.email = user.email
     })
+
+    const errorMessages = ref<string[]>([])
 
     const editUser = async () => {
       try {
         const response: User = await $axios.$put(
           `/api/v1/users/${user.id}`,
-          currentUser,
+          inputUser,
           {
             withCredentials: true,
           },
@@ -88,15 +84,15 @@ export default defineComponent({
         router.push(`/users/${response.id}/show`)
         displayFlashMessage('編集')
       } catch (e) {
-        console.log(e)
+        errorMessages.value = e.response.data
       }
     }
 
     return {
-      currentUser,
+      inputUser,
       user,
       editUser,
-      errors,
+      errorMessages,
     }
   },
 })

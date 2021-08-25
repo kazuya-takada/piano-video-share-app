@@ -6,13 +6,15 @@
           ユーザー登録
         </h1>
       </v-card-title>
-      <ErrorMessage :errors="errors.message" />
+      <ErrorMessage :errors="errorMessages" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <UserFormName v-model="user.name" />
-          <UserFormEmail v-model="user.email" />
-          <UserFormPassword v-model="user.password" />
-          <UserFormPasswordConfirmation v-model="user.password_confirmation" />
+          <UserFormName v-model="inputUser.name" />
+          <UserFormEmail v-model="inputUser.email" />
+          <UserFormPassword v-model="inputUser.password" />
+          <UserFormPasswordConfirmation
+            v-model="inputUser.password_confirmation"
+          />
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規登録
@@ -30,9 +32,10 @@ import {
   useContext,
   inject,
   reactive,
+  ref,
 } from '@nuxtjs/composition-api'
 
-import userKey from '@/store/user/userKey'
+import inputUserKey from '@/store/user/userKey'
 import { User, UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
@@ -43,7 +46,7 @@ export default defineComponent({
     const { $axios, $auth } = useContext()
 
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
-    const { setUser } = inject(userKey) as UseUser
+    const { setUser } = inject(inputUserKey) as UseUser
 
     interface InputUser {
       name: string
@@ -52,28 +55,22 @@ export default defineComponent({
       password_confirmation: string
     }
 
-    const user = reactive<InputUser>({
+    const inputUser = reactive<InputUser>({
       name: '',
       email: '',
       password: '',
       password_confirmation: '',
     })
 
-    interface Erros {
-      message: string[]
-    }
-
-    const errors = reactive<Erros>({
-      message: [],
-    })
+    const errorMessages = ref<string[]>([])
 
     const registerUser = async () => {
       try {
-        await $axios.$post('/api/v1/users', user)
+        await $axios.$post('/api/v1/users', inputUser)
         const response: any = await $auth.loginWith('local', {
           data: {
-            email: user.email,
-            password: user.password,
+            email: inputUser.email,
+            password: inputUser.password,
           },
           withCredentials: true,
         })
@@ -81,14 +78,15 @@ export default defineComponent({
         setUser(responseData.id, responseData.name, responseData.email)
         displayFlashMessage('新規登録')
       } catch (e) {
-        errors.message = e.response.data
+        console.log(e.response)
+        errorMessages.value = e.response.data
       }
     }
 
     return {
-      user,
+      inputUser,
+      errorMessages,
       registerUser,
-      errors,
     }
   },
 })

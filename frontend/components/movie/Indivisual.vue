@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from '@nuxtjs/composition-api'
+import { defineComponent, inject, ref } from '@nuxtjs/composition-api'
 import movieKey from '@/store/movie/movieKey'
-import { UseMovie } from '@/store/movie/movieTypes'
+import { Movie, UseMovie } from '@/store/movie/movieTypes'
 
 export default defineComponent({
   props: {
@@ -31,8 +31,7 @@ export default defineComponent({
   },
   setup(props) {
     const { movies } = inject(movieKey) as UseMovie
-
-    const movie = movies.movieList[props.index]
+    const movie = ref<Movie>(movies.value[props.index])
 
     return {
       movie,
