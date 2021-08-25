@@ -6,6 +6,9 @@ const user = reactive<User>({
   id: 0,
   name: '',
   email: '',
+  created_at: '',
+  updated_at: '',
+  password_digest: '',
 })
 
 const setUser = (id: number, name: string, email: string) => {
@@ -16,14 +19,10 @@ const setUser = (id: number, name: string, email: string) => {
 
 const fetchUser = async () => {
   try {
-    await axios
-      .get('/api/v1/user', { withCredentials: true })
-      .then((response: any) => {
-        setUser(response.data.id, response.data.name, response.data.email)
-      })
-  } catch (e) {
-    console.log(e)
-  }
+    const response = await axios.get('/api/v1/user', { withCredentials: true })
+    const user: User = response.data
+    setUser(user.id, user.name, user.email)
+  } catch (e) {}
 }
 
 const unsetUser = () => {

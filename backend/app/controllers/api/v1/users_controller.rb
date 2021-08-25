@@ -21,6 +21,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def destroy
+    reset_session
     @user.destroy
     render json: @user
   end

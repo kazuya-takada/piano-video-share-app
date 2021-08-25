@@ -33,7 +33,7 @@ import {
 } from '@nuxtjs/composition-api'
 
 import userKey from '@/store/user/userKey'
-import { UseUser } from '@/store/user/userTypes'
+import { User, UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
@@ -45,14 +45,14 @@ export default defineComponent({
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
     const { setUser } = inject(userKey) as UseUser
 
-    interface User {
+    interface InputUser {
       name: string
       email: string
       password: string
       password_confirmation: string
     }
 
-    const user = reactive<User>({
+    const user = reactive<InputUser>({
       name: '',
       email: '',
       password: '',
@@ -68,29 +68,21 @@ export default defineComponent({
     })
 
     const registerUser = async () => {
-      await $axios
-        .$post('/api/v1/users', user)
-        .then(async () => {
-          await $auth
-            .loginWith('local', {
-              data: {
-                email: user.email,
-                password: user.password,
-              },
-              withCredentials: true,
-            })
-            .then((response: any) => {
-              const user = response.data
-              setUser(user.id, user.name, user.email)
-            })
-            .catch((e) => {
-              console.log(e)
-            })
-          displayFlashMessage('新規登録')
+      try {
+        await $axios.$post('/api/v1/users', user)
+        const response: any = await $auth.loginWith('local', {
+          data: {
+            email: user.email,
+            password: user.password,
+          },
+          withCredentials: true,
         })
-        .catch((e) => {
-          errors.message = e.response.data
-        })
+        const responseData: User = response.data
+        setUser(responseData.id, responseData.name, responseData.email)
+        displayFlashMessage('新規登録')
+      } catch (e) {
+        errors.message = e.response.data
+      }
     }
 
     return {

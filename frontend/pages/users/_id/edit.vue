@@ -41,7 +41,7 @@ import {
   reactive,
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
-import { UseUser } from '@/store/user/userTypes'
+import { User, UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
@@ -76,19 +76,20 @@ export default defineComponent({
     })
 
     const editUser = async () => {
-      await $axios
-        .$put(`/api/v1/users/${user.id}`, currentUser, {
-          withCredentials: true,
-        })
-        .then((response: any) => {
-          const user = response
-          setUser(user.id, user.name, user.email)
-          router.push(`/users/${user.id}/show`)
-          displayFlashMessage('編集')
-        })
-        .catch((e) => {
-          errors.message = e.response.data
-        })
+      try {
+        const response: User = await $axios.$put(
+          `/api/v1/users/${user.id}`,
+          currentUser,
+          {
+            withCredentials: true,
+          },
+        )
+        setUser(response.id, response.name, response.email)
+        router.push(`/users/${response.id}/show`)
+        displayFlashMessage('編集')
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     return {
