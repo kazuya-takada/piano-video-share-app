@@ -8,6 +8,7 @@ class Api::V1::UsersController < ApplicationController
     if user.save
       render json: user
     else
+      # 422でないとerrors.full_messagesが使えない
       render json: user.errors.full_messages, status: 422
     end
   end
