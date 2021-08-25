@@ -6,11 +6,11 @@
           ログイン
         </h1>
       </v-card-title>
-      <ErrorMessage :errors="errors.message" />
+      <ErrorMessage :errors="errorMessages" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <UserFormEmail v-model="user.email" />
-          <UserFormPassword v-model="user.password" />
+          <UserFormEmail v-model="inputUser.email" />
+          <UserFormPassword v-model="inputUser.password" />
           <v-card-actions class="mt-3">
             <v-btn color="#6abe83" class="white--text" @click="login">
               ログイン
@@ -28,9 +28,10 @@ import {
   useContext,
   inject,
   reactive,
+  ref,
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
-import { UseUser } from '@/store/user/userTypes'
+import { User, UseUser } from '@/store/user/userTypes'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
 
@@ -42,47 +43,39 @@ export default defineComponent({
     const { setUser } = inject(userKey) as UseUser
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
 
-    interface User {
+    interface InputUser {
       email: string
       password: string
     }
 
-    const user = reactive<User>({
+    const inputUser = reactive<InputUser>({
       email: '',
       password: '',
     })
 
-    interface Erros {
-      message: string[]
-    }
-
-    const errors = reactive<Erros>({
-      message: [],
-    })
+    const errorMessages = ref<string[]>([])
 
     const login = async () => {
-      await $auth
-        .loginWith('local', {
+      try {
+        const response: any = await $auth.loginWith('local', {
           data: {
-            email: user.email,
-            password: user.password,
+            email: inputUser.email,
+            password: inputUser.password,
           },
           withCredentials: true,
         })
-        .then((response: any) => {
-          const user = response.data
-          setUser(user.id, user.name, user.email)
-          displayFlashMessage('ログイン')
-        })
-        .catch((e) => {
-          errors.message = e.response.data.errors
-        })
+        const responseData: User = response.data
+        setUser(responseData.id, responseData.name, responseData.email)
+        displayFlashMessage('ログイン')
+      } catch (e) {
+        errorMessages.value = e.response.data.errors
+      }
     }
 
     return {
-      user,
+      inputUser,
       login,
-      errors,
+      errorMessages,
     }
   },
 })

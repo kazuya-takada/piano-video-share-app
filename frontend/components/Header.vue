@@ -13,7 +13,7 @@
       <v-btn text to="/login" nuxt v-if="!$auth.loggedIn">
         ログイン
       </v-btn>
-      <v-btn text to="/posts/new" nuxt v-if="$auth.loggedIn">
+      <v-btn text to="/movies/new" nuxt v-if="$auth.loggedIn">
         新規投稿
       </v-btn>
       <v-btn text :to="`/users/${user.id}/show`" nuxt v-if="$auth.loggedIn">
@@ -42,13 +42,11 @@ export default defineComponent({
 
     const logout = async () => {
       try {
-        await $axios
-          .delete('/api/v1/logout', {
-            withCredentials: true,
-          })
-          .catch((e) => console.log(e))
-        await unsetUser()
+        await $axios.$delete('/api/v1/logout', {
+          withCredentials: true,
+        })
         await $auth.logout()
+        unsetUser()
         displayFlashMessage('ログアウト')
       } catch (e) {
         console.log(e)

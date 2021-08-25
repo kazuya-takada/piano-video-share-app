@@ -6,13 +6,12 @@
           動画投稿
         </h1>
       </v-card-title>
-      <ErrorMessage :errors="errors.message" />
+      <ErrorMessage :errors="errorMessages" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <MovieFormTitle v-model="movie.title" />
+          <MovieFormTitle v-model="inputMovie.title" />
           <MovieFormVideo @set-image="setImage" />
-          <MovieFormIntroduction v-model="movie.introduction" />
-          {{ movie }}
+          <MovieFormIntroduction v-model="inputMovie.introduction" />
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規投稿
@@ -31,6 +30,7 @@ import {
   useRouter,
   inject,
   reactive,
+  ref,
 } from '@nuxtjs/composition-api'
 import flashKey from '@/store/flash/flashKey'
 import { UseFlashMessage } from '@/store/flash/flashTypes'
@@ -45,47 +45,41 @@ export default defineComponent({
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
     const { setMovies } = inject(movieKey) as UseMovie
 
-    interface MovieInput {
+    interface InputMovie {
       title: string
       movie: any
       introduction: string
     }
 
-    const movie = reactive<MovieInput>({
+    const inputMovie = reactive<InputMovie>({
       title: '',
       movie: '',
       introduction: '',
     })
 
-    interface Erros {
-      message: string[]
-    }
-
-    const errors = reactive<Erros>({
-      message: [],
-    })
+    const errorMessages = ref<string[]>([])
 
     const setImage = (e: any) => {
-      movie.movie = e
+      inputMovie.movie = e
     }
 
     const registerUser = async () => {
       const formData: any = new FormData()
-      formData.append('movie[title]', movie.title)
-      formData.append('movie[movie]', movie.movie)
-      formData.append('movie[introduction]', movie.introduction)
+      formData.append('movie[title]', inputMovie.title)
+      formData.append('movie[movie]', inputMovie.movie)
+      formData.append('movie[introduction]', inputMovie.introduction)
       try {
-        const response: Movie[] = await $axios.$post('/api/v1/movies', formData)
+        const response: Movie = await $axios.$post('/api/v1/movies', formData)
         setMovies(response)
         router.push('/')
         displayFlashMessage('動画投稿')
       } catch (e) {
         switch (e.response.status) {
           case 500:
-            errors.message = ['動画が添付されていません']
+            errorMessages.value = ['動画が添付されていません']
             break
           case 422:
-            errors.message = e.response.data.map((message: string) => {
+            errorMessages.value = e.response.data.map((message: string) => {
               return message.includes('Movie')
                 ? message.replace('Movie', '動画')
                 : message
@@ -99,10 +93,10 @@ export default defineComponent({
     }
 
     return {
-      movie,
+      inputMovie,
       setImage,
       registerUser,
-      errors,
+      errorMessages,
     }
   },
 })

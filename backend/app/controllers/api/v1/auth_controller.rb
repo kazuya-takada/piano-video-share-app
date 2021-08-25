@@ -3,12 +3,12 @@ class Api::V1::AuthController < ApplicationController
   before_action :current_user, only: :get_current_user
 
   def login
-    user = User.find_by(email: params[:email])
-    if user&.authenticate(params[:password])
+    user = User.find_by(email: user_params[:email])
+    if user&.authenticate(user_params[:password])
       session[:user_id] = user.id
       render json: user
     else
-      render json: { errors: ['メールアドレスまたはパスワードが正しくありません。'] }, status: 422
+      render json: { errors: ['メールアドレスまたはパスワードが正しくありません。'] }, status: 401
     end
   end
 
@@ -18,5 +18,11 @@ class Api::V1::AuthController < ApplicationController
 
   def logout
     reset_session
+  end
+
+  private
+
+  def user_params
+    params.permit(:email, :password)
   end
 end

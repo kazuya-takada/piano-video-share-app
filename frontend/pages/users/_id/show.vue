@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <UserDeleteModal :dialog="dialog" />
+    <UserDeleteModal :dialog="dialog" @to-dialog-false="toDialogFalse" />
     <v-card width="800px" class="mx-auto mt-5" elevation="1">
       <v-card-title>
         <h1 class="headline">
@@ -16,11 +16,7 @@
           >
             編集
           </v-btn>
-          <v-btn
-            color="#f06966"
-            class="white--text"
-            @click="dialog.isDisplay = true"
-          >
+          <v-btn color="#f06966" class="white--text" @click="toDialogTrue">
             削除
           </v-btn>
         </v-card-actions>
@@ -50,6 +46,7 @@ import {
   inject,
   useFetch,
   reactive,
+  ref,
 } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
@@ -58,9 +55,15 @@ export default defineComponent({
   setup() {
     const { user, fetchUser } = inject(userKey) as UseUser
 
-    const dialog = reactive({
-      isDisplay: false,
-    })
+    const dialog = ref<boolean>(false)
+
+    const toDialogTrue = () => {
+      dialog.value = true
+    }
+
+    const toDialogFalse = () => {
+      dialog.value = false
+    }
 
     useFetch(async () => {
       await fetchUser()
@@ -69,6 +72,8 @@ export default defineComponent({
     return {
       user,
       dialog,
+      toDialogTrue,
+      toDialogFalse,
     }
   },
 })

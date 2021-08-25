@@ -1,37 +1,29 @@
-import { reactive, readonly } from '@nuxtjs/composition-api'
-import { Movie, Movies, UseMovie } from '@/store/movie/movieTypes'
+import { ref, readonly } from '@nuxtjs/composition-api'
+import { Movie, UseMovie } from '@/store/movie/movieTypes'
 import axios from 'axios'
 
-const movies = reactive<Movies>({
-  movieList: [],
-})
+const movies = ref<Movie[]>([])
 
-const setMovies = (array: any) => {
-  movies.movieList.push(array)
+const setMovies = (movie: Movie) => {
+  movies.value.push(movie)
 }
 
 const unsetMovies = () => {
-  movies.movieList = []
+  movies.value = []
 }
 
 const fetchMovies = async () => {
+  unsetMovies()
   try {
-    await axios.get('/api/v1/movies').then((response: any) => {
-      unsetMovies()
-      response.data.forEach((array: []) => {
-        setMovies(array)
-      })
+    const response = await axios.get('/api/v1/movies')
+    const movieList: Movie[] = response.data
+    movieList.forEach((movie: Movie) => {
+      setMovies(movie)
     })
   } catch (e) {
     console.log(e)
   }
 }
-
-// const unsetUser = () => {
-//   user.id = 0
-//   user.name = ''
-//   user.email = ''
-// }
 
 const useMovie: UseMovie = {
   movies: readonly(movies),
