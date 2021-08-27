@@ -41,13 +41,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  inject,
-  useFetch,
-  reactive,
-  ref,
-} from '@nuxtjs/composition-api'
+import { defineComponent, inject, useFetch, ref } from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 

@@ -1,6 +1,6 @@
 <template>
   <v-col cols="12" sm="8" md="4" class="test">
-    <nuxt-link to="/signup">
+    <nuxt-link :to="`/movies/${movie.id}/show`">
       <v-card class="mx-auto movie-card" max-width="500px">
         <video :src="movie.movie_url" class="preview"></video>
         <!-- <video :src="movie.movie_url" class="preview" controls></video> -->
