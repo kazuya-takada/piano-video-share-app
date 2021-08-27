@@ -38,23 +38,27 @@
                 {{ new Date(movie.created_at).toLocaleString() }}
               </td>
             </tr>
+            <tr>
+              <th class="body-1 font-weight-bold">動画紹介</th>
+              <td class="body-1">
+                {{ movie.introduction }}
+              </td>
+            </tr>
           </tbody>
         </template>
       </v-simple-table>
     </v-card>
-    <button @click="debag">debug</button>
-    {{ movies }}
   </v-container>
 </template>
 
 <script lang="ts">
 import {
   defineComponent,
-  inject,
   useRoute,
+  inject,
   computed,
-  useFetch,
   ref,
+  useFetch,
 } from '@nuxtjs/composition-api'
 import movieKey from '@/store/movie/movieKey'
 import { Movie, UseMovie } from '@/store/movie/movieTypes'
@@ -65,17 +69,22 @@ export default defineComponent({
     const route = useRoute()
     const id = computed(() => route.value.params.id)
 
-    const { movies } = inject(movieKey) as UseMovie
+    const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
-    const movie = ref<Movie>(
-      movies.value.find((movie: Movie) => {
+    const movie = ref({})
+
+    // const movie = ref(
+    //   movies.value.find((movie: Movie) => {
+    //     return movie.id === Number(id.value)
+    //   }),
+    // )
+
+    useFetch(async () => {
+      await fetchMovies()
+      movie.value = movies.value.find((movie: Movie) => {
         return movie.id === Number(id.value)
-      }),
-    )
-
-    const debag = () => {
-      console.log(movie)
-    }
+      })
+    })
 
     // const dialog = ref<boolean>(false)
 
@@ -87,14 +96,7 @@ export default defineComponent({
     //   dialog.value = false
     // }
 
-    // useFetch(async () => {
-    //   await fetchUser()
-    // })
-
     return {
-      id,
-      debag,
-      movies,
       movie,
     }
   },
