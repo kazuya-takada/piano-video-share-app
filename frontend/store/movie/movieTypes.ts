@@ -1,7 +1,7 @@
 import { DeepReadonly } from '@nuxtjs/composition-api'
 
 export interface Movie {
-  id: 0
+  id: number
   title: string
   introduction: string
   created_at: string

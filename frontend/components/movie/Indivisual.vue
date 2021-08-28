@@ -1,19 +1,21 @@
 <template>
-  <v-col cols="12" sm="8" md="4">
-    <v-card class="mx-auto" max-width="500px">
-      <video :src="movie.movie_url" class="preview" controls></video>
-      <v-card-title class="mb-3">
-        {{ movie.title }}
-      </v-card-title>
-      <v-card-subtitle>
-        投稿者：Guest
-        <br />
-        投稿日時：{{ new Date(movie.created_at).toLocaleString() }}
-      </v-card-subtitle>
-      <v-card-actions>
-        <v-btn color="#6abe83" text>再生する</v-btn>
-      </v-card-actions>
-    </v-card>
+  <v-col cols="12" sm="8" md="4" class="test">
+    <nuxt-link :to="`/movies/${movie.id}/show`">
+      <v-card class="mx-auto movie-card" max-width="500px">
+        <video :src="movie.movie_url" class="preview"></video>
+        <!-- <video :src="movie.movie_url" class="preview" controls></video> -->
+        <v-card-title class="text-body-1 font-weight-medium">
+          <p class="movie-title">
+            {{ movie.title }}
+          </p>
+        </v-card-title>
+        <v-card-subtitle>
+          投稿者：Guest
+          <br />
+          投稿日時：{{ new Date(movie.created_at).toLocaleString() }}
+        </v-card-subtitle>
+      </v-card>
+    </nuxt-link>
   </v-col>
 </template>
 
@@ -41,7 +43,27 @@ export default defineComponent({
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+}
+
+.movie-card {
+  transition: all 0.1s;
+}
+
+.movie-card:hover {
+  transform: scale(1.03, 1.03);
+}
+
 .preview {
   width: 100%;
+  object-fit: cover;
+  height: 300px;
+}
+
+.movie-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
