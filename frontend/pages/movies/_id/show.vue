@@ -2,7 +2,7 @@
   <v-container>
     <MovieDeleteModal
       :dialog="dialog"
-      :id="propsId"
+      :id="id"
       @to-dialog-false="toDialogFalse"
     />
     <v-card width="800px" class="mx-auto mt-5" elevation="1">
@@ -18,7 +18,12 @@
         </h1>
         <v-spacer></v-spacer>
         <v-card-actions v-if="isPostUser">
-          <v-btn color="#6abe83" class="white--text mr-3" :to="`/`" nuxt>
+          <v-btn
+            color="#6abe83"
+            class="white--text mr-3"
+            :to="`/movies/${id}/edit`"
+            nuxt
+          >
             編集
           </v-btn>
           <v-btn color="#f06966" class="white--text" @click="toDialogTrue">
@@ -31,7 +36,7 @@
           <tbody>
             <tr>
               <th class="body-1 font-weight-bold">投稿者</th>
-              <td class="body-1">{{ userName }}</td>
+              <td class="body-1">{{ postUserName }}</td>
             </tr>
             <tr>
               <th class="body-1 font-weight-bold">投稿日</th>
@@ -75,11 +80,12 @@ export default defineComponent({
     const { $axios } = useContext()
     const route = useRoute()
 
-    const id = computed(() => route.value.params.id)
-    const propsId = ref<Number>(Number(id.value))
+    const id: ComputedRef<number> = computed(() =>
+      Number(route.value.params.id),
+    )
 
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
-    const { user } = inject(userKey) as UseUser
+    const { user, fetchUser } = inject(userKey) as UseUser
 
     const movie = reactive<Movie>({
       id: 0,
@@ -91,17 +97,14 @@ export default defineComponent({
       user_id: 0,
     })
 
-    const userName = ref<string>('')
-
-    const isPostUser: ComputedRef<boolean> = computed(() => {
-      return movie.user_id === user.id ? true : false
-    })
+    const postUserName = ref<string>('')
 
     useFetch(async () => {
       await fetchMovies()
       const gotMovie = movies.value.find((movie: Movie) => {
         return movie.id === Number(id.value)
       })
+      fetchUser()
       movie.id = gotMovie.id
       movie.title = gotMovie.title
       movie.introduction = gotMovie.introduction
@@ -112,10 +115,14 @@ export default defineComponent({
         const response: User = await $axios.$get(
           `/api/v1/users/${movie.user_id}`,
         )
-        userName.value = response.name
+        postUserName.value = response.name
       } catch (e) {
         console.log(e)
       }
+    })
+
+    const isPostUser: ComputedRef<boolean> = computed(() => {
+      return movie.user_id === user.id ? true : false
     })
 
     const dialog = ref<boolean>(false)
@@ -130,9 +137,9 @@ export default defineComponent({
 
     return {
       movie,
-      userName,
+      postUserName,
       isPostUser,
-      propsId,
+      id,
       dialog,
       toDialogTrue,
       toDialogFalse,

@@ -9,9 +9,15 @@
       <ErrorMessage :errors="errorMessages" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
-          <MovieFormTitle v-model="inputMovie.title" />
+          <MovieFormTitle
+            v-model="inputMovie.title"
+            :title="inputMovie.title"
+          />
           <MovieFormVideo @set-image="setImage" />
-          <MovieFormIntroduction v-model="inputMovie.introduction" />
+          <MovieFormIntroduction
+            v-model="inputMovie.introduction"
+            :title="inputMovie.introduction"
+          />
           <v-card-actions>
             <v-btn color="#6abe83" class="white--text" @click="registerUser">
               新規投稿

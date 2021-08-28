@@ -3,6 +3,7 @@
     filled
     :rules="rules"
     :counter="max"
+    :value="props.introduction"
     @input="handleInput"
     label="投稿コメント"
   ></v-textarea>
@@ -12,7 +13,13 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup(_, context) {
+  props: {
+    introduction: {
+      type: String,
+      reqruied: true,
+    },
+  },
+  setup(props, context) {
     const handleInput = (event: Event) => {
       context.emit('input', event)
     }
@@ -20,6 +27,7 @@ export default defineComponent({
     const max = 200
 
     return {
+      props,
       handleInput,
       max,
       rules: [

@@ -1,6 +1,7 @@
 class Api::V1::MoviesController < ApplicationController
-  skip_before_action :login_required, only: [:index, :show, :destroy]
-  before_action :set_movie, only: [:show, :destroy]
+  skip_before_action :login_required, only: [:index, :show]
+  before_action :set_movie, only: [:show, :update, :destroy]
+  before_action :is_post_user?, only: [:update, :destroy]
 
   def index
     render json: Movie.all.includes(:user), methods: [:movie_url]
@@ -19,10 +20,15 @@ class Api::V1::MoviesController < ApplicationController
     render json: @movie, methods: [:movie_url]
   end
 
-  def destroy
-    if @movie.user != current_user
-      return
+  def update
+    if @movie.update(movie_edit_params)
+      render json: @movie
+    else
+      render json: @movie.errors.full_messages, status: 422
     end
+  end
+
+  def destroy
     @movie.destroy
     render json: @movie
   end
@@ -33,7 +39,17 @@ class Api::V1::MoviesController < ApplicationController
     params.require(:movie).permit(:title, :introduction, :movie)
   end
 
+  def movie_edit_params
+    params.require(:movie).permit(:title, :introduction)
+  end
+
   def set_movie
     @movie = Movie.find(params[:id])
+  end
+
+  def is_post_user?
+    if @movie.user != current_user
+      return
+    end
   end
 end
