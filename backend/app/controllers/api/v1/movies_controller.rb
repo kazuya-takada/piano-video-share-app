@@ -7,7 +7,7 @@ class Api::V1::MoviesController < ApplicationController
   end
 
   def create
-    movie = Movie.new(movie_params)
+    movie = current_user.movies.new(movie_params)
     if movie.save
       render json: movie, methods: [:movie_url]
     else

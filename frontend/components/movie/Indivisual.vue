@@ -10,10 +10,11 @@
           </p>
         </v-card-title>
         <v-card-subtitle>
-          投稿者：Guest
+          投稿者：
           <br />
           投稿日時：{{ new Date(movie.created_at).toLocaleString() }}
         </v-card-subtitle>
+        <button @click="debug">debug</button>
       </v-card>
     </nuxt-link>
   </v-col>
@@ -35,8 +36,13 @@ export default defineComponent({
     const { movies } = inject(movieKey) as UseMovie
     const movie = ref<Movie>(movies.value[props.index])
 
+    const debug = () => {
+      console.log(movie)
+    }
+
     return {
       movie,
+      debug,
     }
   },
 })
