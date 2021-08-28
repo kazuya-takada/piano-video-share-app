@@ -3,11 +3,11 @@ class Api::V1::MoviesController < ApplicationController
   before_action :set_movie, only: [:show, :destroy]
 
   def index
-    render json: Movie.all, methods: [:movie_url]
+    render json: Movie.all.includes(:user), methods: [:movie_url]
   end
 
   def create
-    movie = Movie.new(movie_params)
+    movie = current_user.movies.new(movie_params)
     if movie.save
       render json: movie, methods: [:movie_url]
     else
@@ -20,6 +20,9 @@ class Api::V1::MoviesController < ApplicationController
   end
 
   def destroy
+    if @movie.user != current_user
+      return
+    end
     @movie.destroy
     render json: @movie
   end

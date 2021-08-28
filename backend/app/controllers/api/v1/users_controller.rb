@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   wrap_parameters include: [:name, :email, :password, :password_confirmation]
-  skip_before_action :login_required, only: :create
-  before_action :set_user, only: [:update, :destroy]
+  skip_before_action :login_required, only: [:create, :show]
+  before_action :set_user, only: [:update, :show, :destroy]
 
   def create
     user = User.new(user_params)
@@ -11,6 +11,10 @@ class Api::V1::UsersController < ApplicationController
       # 422でないとerrors.full_messagesが使えない
       render json: user.errors.full_messages, status: 422
     end
+  end
+
+  def show
+    render json: @user
   end
 
   def update

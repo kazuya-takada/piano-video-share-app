@@ -10,7 +10,7 @@
           </p>
         </v-card-title>
         <v-card-subtitle>
-          投稿者：Guest
+          投稿者：{{ userName }}
           <br />
           投稿日時：{{ new Date(movie.created_at).toLocaleString() }}
         </v-card-subtitle>
@@ -20,9 +20,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  useContext,
+  inject,
+  ref,
+  useFetch,
+} from '@nuxtjs/composition-api'
 import movieKey from '@/store/movie/movieKey'
 import { Movie, UseMovie } from '@/store/movie/movieTypes'
+import { User } from '@/store/user/userTypes'
 
 export default defineComponent({
   props: {
@@ -32,11 +39,27 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const { $axios } = useContext()
     const { movies } = inject(movieKey) as UseMovie
+
     const movie = ref<Movie>(movies.value[props.index])
+    const userName = ref<string>('')
+
+    useFetch(async () => {
+      try {
+        const response: User = await $axios.$get(
+          `/api/v1/users/${movie.value.user_id}`,
+        )
+        userName.value = response.name
+      } catch (e) {
+        console.log(e)
+      }
+    })
 
     return {
       movie,
+      movies,
+      userName,
     }
   },
 })

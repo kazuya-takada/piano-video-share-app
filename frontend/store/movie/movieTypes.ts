@@ -7,6 +7,7 @@ export interface Movie {
   created_at: string
   updated_at: string
   movie_url: string
+  user_id: number
 }
 
 export interface UseMovie {

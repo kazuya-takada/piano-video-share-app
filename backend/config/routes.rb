@@ -4,7 +4,7 @@ Rails.application.routes.draw do
       post "/login", to: "auth#login"
       get "/user", to: "auth#get_current_user"
       delete "logout", to: "auth#logout"
-			resources :users, only: [:create, :update, :destroy]
+			resources :users, only: [:create, :show, :update, :destroy]
       resources :movies, only: [:index, :create, :show, :destroy]
     end
   end

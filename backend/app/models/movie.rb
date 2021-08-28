@@ -8,6 +8,8 @@ class Movie < ApplicationRecord
   validates :movie, attached: true, content_type: { in: %w[video/mp4 video/mov video/wmv] }, 
             size: { less_than: 500.megabytes , message: 'ファイルサイズは500Mb以下にしてください' }
 
+  belongs_to :user
+
   def movie_url
     movie.attached? ? url_for(movie) : nil
   end 

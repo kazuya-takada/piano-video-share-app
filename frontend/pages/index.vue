@@ -8,12 +8,19 @@
       />
       ログインユーザー
       {{ user }}
+      <br />
+      {{ movies }}
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, useFetch, inject } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  useContext,
+  inject,
+  useFetch,
+} from '@nuxtjs/composition-api'
 import userKey from '@/store/user/userKey'
 import { UseUser } from '@/store/user/userTypes'
 import movieKey from '@/store/movie/movieKey'
@@ -22,6 +29,8 @@ import { UseMovie } from '@/store/movie/movieTypes'
 export default defineComponent({
   auth: false,
   setup() {
+    const { $axios } = useContext()
+
     const { user, fetchUser } = inject(userKey) as UseUser
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
