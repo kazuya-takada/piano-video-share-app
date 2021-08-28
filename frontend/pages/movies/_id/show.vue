@@ -40,7 +40,7 @@
               </td>
             </tr>
             <tr>
-              <th class="body-1 font-weight-bold">動画紹介</th>
+              <th class="body-1 font-weight-bold" width="15%">動画紹介</th>
               <td class="body-1">
                 {{ movie.introduction }}
               </td>
