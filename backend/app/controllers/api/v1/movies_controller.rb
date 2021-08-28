@@ -20,6 +20,9 @@ class Api::V1::MoviesController < ApplicationController
   end
 
   def destroy
+    if @movie.user != current_user
+      return
+    end
     @movie.destroy
     render json: @movie
   end

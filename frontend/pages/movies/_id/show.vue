@@ -17,7 +17,6 @@
           {{ movie.title }}
         </h1>
         <v-spacer></v-spacer>
-        {{ isPostUser }}
         <v-card-actions v-if="isPostUser">
           <v-btn color="#6abe83" class="white--text mr-3" :to="`/`" nuxt>
             編集
