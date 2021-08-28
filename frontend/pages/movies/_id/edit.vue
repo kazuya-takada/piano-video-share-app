@@ -16,7 +16,7 @@
             :introduction="inputMovie.introduction"
           />
           <v-card-actions>
-            <v-btn color="#6abe83" class="white--text" @click="test">
+            <v-btn color="#6abe83" class="white--text" @click="editMovie">
               編集
             </v-btn>
             <v-btn
@@ -107,33 +107,24 @@ export default defineComponent({
 
     const errorMessages = ref<string[]>([])
 
-    // const editUser = async () => {
-    //   try {
-    //     const response: User = await $axios.$put(
-    //       `/api/v1/users/${user.id}`,
-    //       inputUser,
-    //       {
-    //         withCredentials: true,
-    //       },
-    //     )
-    //     setUser(response.id, response.name, response.email)
-    //     router.push(`/users/${response.id}/show`)
-    //     displayFlashMessage('編集')
-    //   } catch (e) {
-    //     errorMessages.value = e.response.data
-    //   }
-    // }
-
-    const test = () => {
-      console.log('kazuya')
+    const editMovie = async () => {
+      try {
+        const response: Movie = await $axios.$put(
+          `/api/v1/movies/${movieId.value}`,
+          inputMovie,
+        )
+        router.push(`/movies/${movieId.value}/show`)
+        displayFlashMessage('編集')
+      } catch (e) {
+        errorMessages.value = e.response.data
+      }
     }
 
     return {
-      // movie,
       movieId,
       inputMovie,
       errorMessages,
-      test,
+      editMovie,
     }
   },
 })
