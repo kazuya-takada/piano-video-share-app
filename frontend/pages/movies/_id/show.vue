@@ -2,7 +2,7 @@
   <v-container>
     <MovieDeleteModal
       :dialog="dialog"
-      :id="propsId"
+      :id="id"
       @to-dialog-false="toDialogFalse"
     />
     <v-card width="800px" class="mx-auto mt-5" elevation="1">
@@ -18,7 +18,12 @@
         </h1>
         <v-spacer></v-spacer>
         <v-card-actions v-if="isPostUser">
-          <v-btn color="#6abe83" class="white--text mr-3" :to="`/`" nuxt>
+          <v-btn
+            color="#6abe83"
+            class="white--text mr-3"
+            :to="`/movies/${id}/edit`"
+            nuxt
+          >
             編集
           </v-btn>
           <v-btn color="#f06966" class="white--text" @click="toDialogTrue">
@@ -75,8 +80,9 @@ export default defineComponent({
     const { $axios } = useContext()
     const route = useRoute()
 
-    const id = computed(() => route.value.params.id)
-    const propsId = ref<Number>(Number(id.value))
+    const id: ComputedRef<number> = computed(() =>
+      Number(route.value.params.id),
+    )
 
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
     const { user } = inject(userKey) as UseUser
@@ -132,7 +138,7 @@ export default defineComponent({
       movie,
       userName,
       isPostUser,
-      propsId,
+      id,
       dialog,
       toDialogTrue,
       toDialogFalse,
