@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <!-- <UserDeleteModal :dialog="dialog" @to-dialog-false="toDialogFalse" /> -->
+    <MovieDeleteModal
+      :dialog="dialog"
+      :id="propsId"
+      @to-dialog-false="toDialogFalse"
+    />
     <v-card width="800px" class="mx-auto mt-5" elevation="1">
       <video
         :src="movie.movie_url"
@@ -17,10 +21,7 @@
           <v-btn color="#6abe83" class="white--text mr-3" :to="`/`" nuxt>
             編集
           </v-btn>
-          <!-- <v-btn color="#f06966" class="white--text" @click="toDialogTrue">
-            削除
-          </v-btn> -->
-          <v-btn color="#f06966" class="white--text">
+          <v-btn color="#f06966" class="white--text" @click="toDialogTrue">
             削除
           </v-btn>
         </v-card-actions>
@@ -39,7 +40,7 @@
               </td>
             </tr>
             <tr>
-              <th class="body-1 font-weight-bold">動画紹介</th>
+              <th class="body-1 font-weight-bold" width="15%">動画紹介</th>
               <td class="body-1">
                 {{ movie.introduction }}
               </td>
@@ -68,6 +69,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const id = computed(() => route.value.params.id)
+    const propsId = ref<Number>(Number(id.value))
 
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
@@ -86,18 +88,22 @@ export default defineComponent({
       })
     })
 
-    // const dialog = ref<boolean>(false)
+    const dialog = ref<boolean>(false)
 
-    // const toDialogTrue = () => {
-    //   dialog.value = true
-    // }
+    const toDialogTrue = () => {
+      dialog.value = true
+    }
 
-    // const toDialogFalse = () => {
-    //   dialog.value = false
-    // }
+    const toDialogFalse = () => {
+      dialog.value = false
+    }
 
     return {
       movie,
+      propsId,
+      dialog,
+      toDialogTrue,
+      toDialogFalse,
     }
   },
 })
