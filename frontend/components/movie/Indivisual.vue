@@ -40,10 +40,9 @@ export default defineComponent({
   },
   setup(props) {
     const { $axios } = useContext()
-
     const { movies } = inject(movieKey) as UseMovie
-    const movie = ref<Movie>(movies.value[props.index])
 
+    const movie = ref<Movie>(movies.value[props.index])
     const userName = ref<string>('')
 
     useFetch(async () => {

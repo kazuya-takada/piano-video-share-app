@@ -3,7 +3,7 @@ class Api::V1::MoviesController < ApplicationController
   before_action :set_movie, only: [:show, :destroy]
 
   def index
-    render json: Movie.all, methods: [:movie_url]
+    render json: Movie.all.includes(:user), methods: [:movie_url]
   end
 
   def create

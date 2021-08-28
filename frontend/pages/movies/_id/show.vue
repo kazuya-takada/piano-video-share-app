@@ -17,7 +17,8 @@
           {{ movie.title }}
         </h1>
         <v-spacer></v-spacer>
-        <v-card-actions>
+        {{ isPostUser }}
+        <v-card-actions v-if="isPostUser">
           <v-btn color="#6abe83" class="white--text mr-3" :to="`/`" nuxt>
             編集
           </v-btn>
@@ -62,10 +63,12 @@ import {
   ref,
   reactive,
   useFetch,
+  ComputedRef,
 } from '@nuxtjs/composition-api'
 import movieKey from '@/store/movie/movieKey'
 import { Movie, UseMovie } from '@/store/movie/movieTypes'
-import { User } from '@/store/user/userTypes'
+import { User, UseUser } from '@/store/user/userTypes'
+import userKey from '@/store/user/userKey'
 
 export default defineComponent({
   auth: false,
@@ -77,6 +80,7 @@ export default defineComponent({
     const propsId = ref<Number>(Number(id.value))
 
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
+    const { user } = inject(userKey) as UseUser
 
     const movie = reactive<Movie>({
       id: 0,
@@ -90,11 +94,9 @@ export default defineComponent({
 
     const userName = ref<string>('')
 
-    // const movie = ref(
-    //   movies.value.find((movie: Movie) => {
-    //     return movie.id === Number(id.value)
-    //   }),
-    // )
+    const isPostUser: ComputedRef<boolean> = computed(() => {
+      return movie.user_id === user.id ? true : false
+    })
 
     useFetch(async () => {
       await fetchMovies()
@@ -130,6 +132,7 @@ export default defineComponent({
     return {
       movie,
       userName,
+      isPostUser,
       propsId,
       dialog,
       toDialogTrue,
