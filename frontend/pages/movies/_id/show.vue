@@ -31,7 +31,7 @@
           <tbody>
             <tr>
               <th class="body-1 font-weight-bold">投稿者</th>
-              <td class="body-1">（仮）</td>
+              <td class="body-1">{{ userName }}</td>
             </tr>
             <tr>
               <th class="body-1 font-weight-bold">投稿日</th>
@@ -55,25 +55,40 @@
 <script lang="ts">
 import {
   defineComponent,
+  useContext,
   useRoute,
   inject,
   computed,
   ref,
+  reactive,
   useFetch,
 } from '@nuxtjs/composition-api'
 import movieKey from '@/store/movie/movieKey'
 import { Movie, UseMovie } from '@/store/movie/movieTypes'
+import { User } from '@/store/user/userTypes'
 
 export default defineComponent({
   auth: false,
   setup() {
+    const { $axios } = useContext()
     const route = useRoute()
+
     const id = computed(() => route.value.params.id)
     const propsId = ref<Number>(Number(id.value))
 
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
-    const movie = ref({})
+    const movie = reactive<Movie>({
+      id: 0,
+      title: '',
+      introduction: '',
+      created_at: '',
+      updated_at: '',
+      movie_url: '',
+      user_id: 0,
+    })
+
+    const userName = ref<string>('')
 
     // const movie = ref(
     //   movies.value.find((movie: Movie) => {
@@ -83,9 +98,23 @@ export default defineComponent({
 
     useFetch(async () => {
       await fetchMovies()
-      movie.value = movies.value.find((movie: Movie) => {
+      const gotMovie = movies.value.find((movie: Movie) => {
         return movie.id === Number(id.value)
       })
+      movie.id = gotMovie.id
+      movie.title = gotMovie.title
+      movie.introduction = gotMovie.introduction
+      movie.created_at = gotMovie.created_at
+      movie.movie_url = gotMovie.movie_url
+      movie.user_id = gotMovie.user_id
+      try {
+        const response: User = await $axios.$get(
+          `/api/v1/users/${movie.user_id}`,
+        )
+        userName.value = response.name
+      } catch (e) {
+        console.log(e)
+      }
     })
 
     const dialog = ref<boolean>(false)
@@ -100,6 +129,7 @@ export default defineComponent({
 
     return {
       movie,
+      userName,
       propsId,
       dialog,
       toDialogTrue,
