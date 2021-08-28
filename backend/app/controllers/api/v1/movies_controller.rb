@@ -1,6 +1,6 @@
 class Api::V1::MoviesController < ApplicationController
-  skip_before_action :login_required, only: [:index, :show]
-  before_action :set_movie, only: :show
+  skip_before_action :login_required, only: [:index, :show, :destroy]
+  before_action :set_movie, only: [:show, :destroy]
 
   def index
     render json: Movie.all, methods: [:movie_url]
@@ -17,6 +17,11 @@ class Api::V1::MoviesController < ApplicationController
 
   def show
     render json: @movie, methods: [:movie_url]
+  end
+
+  def destroy
+    @movie.destroy
+    render json: @movie
   end
 
   private

@@ -8,7 +8,6 @@
       />
       ログインユーザー
       {{ user }}
-      <br />
     </v-row>
   </div>
 </template>
