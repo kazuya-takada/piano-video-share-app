@@ -36,7 +36,7 @@
           <tbody>
             <tr>
               <th class="body-1 font-weight-bold">投稿者</th>
-              <td class="body-1">{{ userName }}</td>
+              <td class="body-1">{{ postUserName }}</td>
             </tr>
             <tr>
               <th class="body-1 font-weight-bold">投稿日</th>
@@ -85,7 +85,7 @@ export default defineComponent({
     )
 
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
-    const { user } = inject(userKey) as UseUser
+    const { user, fetchUser } = inject(userKey) as UseUser
 
     const movie = reactive<Movie>({
       id: 0,
@@ -97,17 +97,14 @@ export default defineComponent({
       user_id: 0,
     })
 
-    const userName = ref<string>('')
-
-    const isPostUser: ComputedRef<boolean> = computed(() => {
-      return movie.user_id === user.id ? true : false
-    })
+    const postUserName = ref<string>('')
 
     useFetch(async () => {
       await fetchMovies()
       const gotMovie = movies.value.find((movie: Movie) => {
         return movie.id === Number(id.value)
       })
+      fetchUser()
       movie.id = gotMovie.id
       movie.title = gotMovie.title
       movie.introduction = gotMovie.introduction
@@ -118,10 +115,14 @@ export default defineComponent({
         const response: User = await $axios.$get(
           `/api/v1/users/${movie.user_id}`,
         )
-        userName.value = response.name
+        postUserName.value = response.name
       } catch (e) {
         console.log(e)
       }
+    })
+
+    const isPostUser: ComputedRef<boolean> = computed(() => {
+      return movie.user_id === user.id ? true : false
     })
 
     const dialog = ref<boolean>(false)
@@ -136,7 +137,7 @@ export default defineComponent({
 
     return {
       movie,
-      userName,
+      postUserName,
       isPostUser,
       id,
       dialog,

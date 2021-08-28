@@ -2,7 +2,7 @@
   <v-container>
     <v-card width="500px" class="mx-auto mt-5" elevation="1">
       <v-card-title>
-        <h1 class="headline">動画編集{{ inputMovie }}</h1>
+        <h1 class="headline">動画編集</h1>
       </v-card-title>
       <ErrorMessage :errors="errorMessages" />
       <v-card-text>
@@ -67,16 +67,6 @@ export default defineComponent({
     const { displayFlashMessage } = inject(flashKey) as UseFlashMessage
     const { movies, fetchMovies } = inject(movieKey) as UseMovie
 
-    // const movie = reactive<Movie>({
-    //   id: 0,
-    //   title: '',
-    //   introduction: '',
-    //   created_at: '',
-    //   updated_at: '',
-    //   movie_url: '',
-    //   user_id: 0,
-    // })
-
     const movieId = ref<number>(0)
 
     interface InputMovie {
@@ -94,12 +84,6 @@ export default defineComponent({
       const gotMovie = movies.value.find((movie: Movie) => {
         return movie.id === Number(id.value)
       })
-      // movie.id = gotMovie.id
-      // movie.title = gotMovie.title
-      // movie.introduction = gotMovie.introduction
-      // movie.created_at = gotMovie.created_at
-      // movie.movie_url = gotMovie.movie_url
-      // movie.user_id = gotMovie.user_id
       movieId.value = gotMovie.id
       inputMovie.title = gotMovie.title
       inputMovie.introduction = gotMovie.introduction
