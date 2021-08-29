@@ -9,6 +9,12 @@
       <ErrorMessage :errors="errorMessages" />
       <v-card-text>
         <v-form ref="form" lazy-validation>
+          <p>ゲストユーザー用</p>
+          <p>ログインID：test@test.com</p>
+          <p>パスワード：password</p>
+          <p>
+            ※ゲストユーザーでユーザー削除を行った場合、大変お手数ですが、同様のユーザー情報で新規ユーザー登録いただけると、ありがたいです（ユーザー名についてはtestとしていただけると幸いです）。
+          </p>
           <UserFormEmail v-model="inputUser.email" />
           <UserFormPassword v-model="inputUser.password" />
           <v-card-actions class="mt-3">

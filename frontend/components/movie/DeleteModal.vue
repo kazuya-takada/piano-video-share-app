@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="500">
+  <v-dialog v-model="dialog" persistent width="500">
     <v-card>
       <v-card-title class="text-h5 grey lighten-2">
         本当に削除しますか？
