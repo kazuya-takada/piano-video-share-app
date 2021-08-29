@@ -57,7 +57,8 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://localhost:3000',
+    // '/api/': 'http://localhost:3000',
+    '/api/': 'https://api-piano-video-share.herokuapp.com/',
   },
 
   router: {

@@ -6,10 +6,6 @@
         :key="index"
         :index="index"
       />
-      ログインユーザー
-      {{ user }}
-      <br />
-      {{ movies }}
     </v-row>
   </div>
 </template>
