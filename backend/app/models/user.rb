@@ -8,5 +8,5 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }, length: { maximum: 72 }
   validates :password, format: { with: VALID_PASSWORD_REGEX }, length: {minimum: 8, maximum: 30 }, on: :create
 
-  has_many :movies
+  has_many :movies, :dependent => :destroy
 end
