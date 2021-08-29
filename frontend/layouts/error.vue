@@ -1,14 +1,20 @@
 <template>
   <v-app dark>
     <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
+      <v-alert dense outlined type="error">
+        {{ pageNotFound }}
+      </v-alert>
     </h1>
     <h1 v-else>
-      {{ otherError }}
+      <v-alert dense outlined type="error">
+        {{ otherError }}
+      </v-alert>
     </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
+    <v-card-actions>
+      <v-btn color="#6abe83" class="white--text" to="/" nuxt>
+        ホームへ
+      </v-btn>
+    </v-card-actions>
   </v-app>
 </template>
 
@@ -18,22 +24,22 @@ export default {
   props: {
     error: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
-  data () {
+  data() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      pageNotFound: '404 存在しないページです',
+      otherError: 'エラーが発生しました',
     }
   },
-  head () {
+  head() {
     const title =
       this.error.statusCode === 404 ? this.pageNotFound : this.otherError
     return {
-      title
+      title,
     }
-  }
+  },
 }
 </script>
 
