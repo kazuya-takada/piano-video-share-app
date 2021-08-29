@@ -52,8 +52,6 @@ GEM
       activejob (= 6.0.4)
       activerecord (= 6.0.4)
       marcel (~> 1.0.0)
-    activestorage-validator (0.1.4)
-      rails (>= 5.2.0)
     activesupport (6.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
@@ -94,6 +92,7 @@ GEM
     nokogiri (1.12.3)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
+    pg (1.2.3)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -163,12 +162,12 @@ PLATFORMS
 
 DEPENDENCIES
   active_storage_validations
-  activestorage-validator
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.2)
   byebug
   jbuilder (~> 2.7)
   listen (~> 3.2)
+  pg
   pry-rails
   puma (~> 4.1)
   rack-cors
