@@ -22,8 +22,8 @@ Bundler.require(*Rails.groups)
 module Backend
   class Application < Rails::Application
     config.load_defaults 6.0
-
     config.api_only = true
+    config.action_controller.allow_forgery_protection = false
 
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore

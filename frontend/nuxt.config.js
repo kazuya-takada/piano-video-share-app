@@ -52,15 +52,15 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // baseURL: 'http://localhost:3000',
-    baseURL: 'https://api-piano-video-share.herokuapp.com',
-    // proxy: true,
-    // withCredentials: true,
+    // baseURL: 'https://api-piano-video-share.herokuapp.com',
+    proxy: true,
+    withCredentials: true,
   },
 
-  // proxy: {
-  // '/api/': 'http://localhost:3000',
-  //   '/api/': 'https://api-piano-video-share.herokuapp.com',
-  // },
+  proxy: {
+    // '/api/': 'http://localhost:3000',
+    '/api/': 'https://api-piano-video-share.herokuapp.com',
+  },
 
   router: {
     middleware: ['auth'],

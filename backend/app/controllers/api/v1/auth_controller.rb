@@ -18,6 +18,7 @@ class Api::V1::AuthController < ApplicationController
 
   def logout
     reset_session
+    render json: @current_user
   end
 
   private
